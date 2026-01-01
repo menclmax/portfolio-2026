@@ -26,6 +26,8 @@ export default function ProjectPage() {
   const prototypingRef = useRef<HTMLDivElement>(null)
   const testingRef = useRef<HTMLDivElement>(null)
   const figmaPrototypeRef = useRef<HTMLDivElement>(null)
+  const reflectionRef = useRef<HTMLDivElement>(null)
+  const testimonialsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,6 +79,8 @@ export default function ProjectPage() {
       
       // Check main sections (in order from bottom to top of page)
       const sections = [
+        { ref: testimonialsRef, id: 'testimonials' },
+        { ref: reflectionRef, id: 'reflection' },
         { ref: figmaPrototypeRef, id: 'figmaPrototype' },
         { ref: detailImage2Ref, id: 'features' },
         { ref: designProcessRef, id: 'designProcess' },
@@ -144,6 +148,58 @@ export default function ProjectPage() {
       document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
     }
   }, [isDark, mounted])
+
+  // Function to add flag icons before university names
+  const renderAboutWithFlags = (text: string) => {
+    const universityFlags: { [key: string]: { code: string, name: string } } = {
+      'The Hague University of Applied Sciences': { code: 'nl', name: 'Netherlands' },
+      'Utrecht University': { code: 'nl', name: 'Netherlands' },
+      'University of Curaçao': { code: 'cw', name: 'Curaçao' },
+      'University of Aruba': { code: 'aw', name: 'Aruba' }
+    }
+
+    let processedText = text
+    const flagImg = (code: string, name: string) => 
+      `<img src="https://hatscripts.github.io/circle-flags/flags/${code}.svg" alt="${name} flag" style="width: 1rem; height: 1rem; border-radius: 50%; vertical-align: middle; display: inline; margin-right: 0.375rem;" />`
+    
+    // First, handle cases where "the" appears before University of Curaçao/Aruba
+    // This ensures the flag appears before "the"
+    const flagCw = universityFlags['University of Curaçao']
+    const flagAw = universityFlags['University of Aruba']
+    
+    // Match "the University of Curaçao" and place flag before "the"
+    processedText = processedText.replace(/\bthe\s+University of Curaçao/gi, (match) => {
+      return flagImg(flagCw.code, flagCw.name) + match
+    })
+    
+    // Match "the University of Aruba" and place flag before "the"
+    processedText = processedText.replace(/\bthe\s+University of Aruba/gi, (match) => {
+      return flagImg(flagAw.code, flagAw.name) + match
+    })
+    
+    // Then process all other university names (in reverse order to handle longer names first)
+    const universities = Object.keys(universityFlags)
+    universities.sort((a, b) => b.length - a.length).forEach(university => {
+      // Skip University of Curaçao/Aruba as they're handled above
+      if (university === 'University of Curaçao' || university === 'University of Aruba') return
+      
+      const flag = universityFlags[university]
+      // Create a regex that matches the university name (case-insensitive)
+      // Use a function to check if we're inside HTML before replacing
+      const regex = new RegExp(`\\b${university.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi')
+      processedText = processedText.replace(regex, (match, offset) => {
+        // Skip if already inside HTML (already processed)
+        const beforeMatch = processedText.substring(0, offset)
+        const openSpans = (beforeMatch.match(/<span[^>]*>/g) || []).length
+        const closeSpans = (beforeMatch.match(/<\/span>/g) || []).length
+        if (openSpans > closeSpans) return match
+        
+        return flagImg(flag.code, flag.name) + match
+      })
+    })
+
+    return processedText
+  }
 
   if (!project) {
     return (
@@ -350,6 +406,30 @@ export default function ProjectPage() {
                 Figma Prototype
               </button>
             )}
+            {project.reflection && (
+              <button
+                onClick={() => scrollToSection(reflectionRef)}
+                className={`block text-base hover:opacity-70 transition-colors duration-300 text-left cursor-pointer ${
+                  activeSection === 'reflection' 
+                    ? (isDark ? 'text-white' : 'text-black') 
+                    : (isDark ? 'text-gray-400' : 'text-gray-600')
+                }`}
+              >
+                Reflection
+              </button>
+            )}
+            {project.testimonials && project.testimonials.length > 0 && (
+              <button
+                onClick={() => scrollToSection(testimonialsRef)}
+                className={`block text-base hover:opacity-70 transition-colors duration-300 text-left cursor-pointer ${
+                  activeSection === 'testimonials' 
+                    ? (isDark ? 'text-white' : 'text-black') 
+                    : (isDark ? 'text-gray-400' : 'text-gray-600')
+                }`}
+              >
+                Testimonials
+              </button>
+            )}
           </nav>
         </div>
 
@@ -432,9 +512,10 @@ export default function ProjectPage() {
               <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-black'}`}>
                 About the Project
               </h2>
-              <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                {project.about}
-              </p>
+              <p 
+                className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                dangerouslySetInnerHTML={{ __html: renderAboutWithFlags(project.about) }}
+              />
               {project.aboutImage && (
                 <div style={{ marginTop: '48px' }}>
                   <div 
@@ -674,6 +755,56 @@ export default function ProjectPage() {
               ) : (
                 <div style={{ marginBottom: '64px' }}></div>
               )}
+            </div>
+          )}
+
+          {/* Reflection */}
+          {project.reflection && (
+            <div ref={reflectionRef} style={{ marginBottom: '64px' }}>
+              <h2 className={`text-2xl font-semibold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
+                Reflection
+              </h2>
+              <p 
+                className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                dangerouslySetInnerHTML={{ __html: project.reflection }}
+              />
+            </div>
+          )}
+
+          {/* Testimonials */}
+          {project.testimonials && project.testimonials.length > 0 && (
+            <div ref={testimonialsRef} style={{ marginBottom: '64px' }}>
+              <h2 className={`text-2xl font-semibold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
+                Testimonials
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {project.testimonials.map((testimonial, index) => (
+                  <div 
+                    key={index}
+                    className="space-y-4 flex flex-col"
+                    style={{
+                      padding: '24px',
+                      borderRadius: '8px',
+                      border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
+                      backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9',
+                      minHeight: '280px',
+                      height: '100%'
+                    }}
+                  >
+                    <p className={`text-base leading-relaxed flex-grow ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                      "{testimonial.text}"
+                    </p>
+                    <div className="mt-auto">
+                      <p className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-black'}`}>
+                        {testimonial.name}
+                      </p>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {testimonial.role}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </article>
