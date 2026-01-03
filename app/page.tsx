@@ -435,12 +435,7 @@ export default function Home() {
               style={{ fontSize: '1.2em', marginRight: '0.5em' }}
               onClick={(e) => {
                 if (isMobile) {
-                  e.stopPropagation()
-                  setAhojToggled(!ahojToggled)
-                }
-              }}
-              onTouchStart={(e) => {
-                if (isMobile) {
+                  e.preventDefault()
                   e.stopPropagation()
                   setAhojToggled(!ahojToggled)
                 }
