@@ -475,7 +475,7 @@ export default function Home() {
                 className="absolute left-1/2 w-1 h-1 rounded-full pulse-dot" 
                 style={{ 
                   backgroundColor: isDark ? '#ffffff' : '#000000',
-                  bottom: isMobile ? '-4px' : '-4px',
+                  bottom: isMobile ? '-2px' : '-4px',
                   transform: 'translateX(-50%)'
                 }}
               ></span>
