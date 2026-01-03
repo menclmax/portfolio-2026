@@ -468,7 +468,7 @@ export default function Home() {
                 </span>
               )}
             </span>
-            <span className="md:inline block">Max Mencl here!</span>
+            <span className="md:inline block mt-2 md:mt-0">Max Mencl here!</span>
           </h1>
           <p className={`text-base md:text-lg mb-8 max-w-1xl leading-relaxed break-words w-full ${isDark ? 'text-gray-300' : 'text-gray-600'}`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', maxWidth: '100%', boxSizing: 'border-box' }}>
             User Experience (UX) Designer based in The Hague, The Netherlands{' '}
