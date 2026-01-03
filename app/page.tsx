@@ -450,7 +450,7 @@ export default function Home() {
                   display: 'inline-block',
                   ...(isMobile ? { 
                     cursor: 'pointer',
-                    padding: '8px'
+                    paddingRight: '8px'
                   } : {})
                 }}
                 className={`transition-all relative inline-block ${
