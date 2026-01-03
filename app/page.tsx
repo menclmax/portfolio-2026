@@ -449,7 +449,8 @@ export default function Home() {
                   maxWidth: 'none',
                   display: 'inline-block',
                   ...(isMobile ? { 
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    padding: '8px'
                   } : {})
                 }}
                 className={`transition-all relative inline-block ${
