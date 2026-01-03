@@ -310,20 +310,154 @@ export default function AboutPage() {
 
       <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 pt-20 md:pt-8 w-full">
         {/* About Section */}
-        <section className="mb-16">
+        <section className="mb-2">
           <h1 className={`text-4xl md:text-4xl font-bold mb-3 ${isDark ? 'text-white' : 'text-black'}`}>
             About
           </h1>
-          <p className={`text-base md:text-lg mb-12 max-w-1xl leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className={`text-base md:text-lg mb-0 max-w-1xl leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Get to know me.
           </p>
         </section>
       </div>
 
       {/* Image Gallery - Full width container to accommodate all images */}
-      <div className="w-full overflow-x-hidden mb-16">
-        <div className="max-w-5xl mx-auto px-4 md:px-6">
-          <div className="relative" style={{ height: '350px', perspective: '1000px' }}>
+      <div className="w-full overflow-visible mb-16">
+        <div className="max-w-5xl mx-auto px-2 md:px-6 overflow-visible">
+          {/* Mobile Grid 2x2 with overlap */}
+          <div className="grid grid-cols-2 gap-0 md:hidden mx-4 py-4 overflow-visible">
+            {/* Card 1 - Top Left */}
+            <div className="relative flex justify-center items-center py-2">
+              <div 
+                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                style={{
+                  width: '160px',
+                  height: '200px',
+                  transform: 'translate(8px, 8px) rotate(-3deg)',
+                  zIndex: 2,
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translate(8px, 8px) rotate(-3deg) scale(1.05)'
+                  e.currentTarget.style.zIndex = '10'
+                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translate(8px, 8px) rotate(-3deg)'
+                  e.currentTarget.style.zIndex = '2'
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+              >
+                <img 
+                  src="/assets/IMG_1452.JPG" 
+                  alt="Interviewing worldwide pianist Costantino Carrara" 
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            </div>
+
+            {/* Card 2 - Top Right */}
+            <div className="relative flex justify-center items-center py-2">
+              <div 
+                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                style={{
+                  width: '160px',
+                  height: '200px',
+                  transform: 'translate(-8px, 8px) rotate(2deg)',
+                  zIndex: 1,
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translate(-8px, 8px) rotate(2deg) scale(1.05)'
+                  e.currentTarget.style.zIndex = '10'
+                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translate(-8px, 8px) rotate(2deg)'
+                  e.currentTarget.style.zIndex = '1'
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+              >
+                <img 
+                  src="/assets/IMG_2680.JPG" 
+                  alt="Interviewing Ivana Tattoo Art" 
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            </div>
+
+            {/* Card 3 - Bottom Left */}
+            <div className="relative flex justify-center items-center py-2">
+              <div 
+                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                style={{
+                  width: '160px',
+                  height: '200px',
+                  transform: 'translate(8px, -8px) rotate(-1deg)',
+                  zIndex: 3,
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translate(8px, -8px) rotate(-1deg) scale(1.05)'
+                  e.currentTarget.style.zIndex = '10'
+                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translate(8px, -8px) rotate(-1deg)'
+                  e.currentTarget.style.zIndex = '3'
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+              >
+                <Image 
+                  src="/assets/IMG_6704.JPG" 
+                  alt="Bratislava, Slovakia" 
+                  fill
+                  loading="eager"
+                  sizes="160px"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Card 4 - Bottom Right */}
+            <div className="relative flex justify-center items-center py-2">
+              <div 
+                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                style={{
+                  width: '160px',
+                  height: '200px',
+                  transform: 'translate(-8px, -8px) rotate(1deg)',
+                  zIndex: 4,
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translate(-8px, -8px) rotate(1deg) scale(1.05)'
+                  e.currentTarget.style.zIndex = '10'
+                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translate(-8px, -8px) rotate(1deg)'
+                  e.currentTarget.style.zIndex = '4'
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
+                }}
+              >
+                <Image 
+                  src="/assets/IMG_8467.JPG" 
+                  alt="TV Markiza" 
+                  fill
+                  loading="eager"
+                  sizes="160px"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden md:block relative" style={{ height: '350px', perspective: '1000px' }}>
             <div className="relative mx-auto" style={{ width: '820px', height: '350px', maxWidth: '100%' }}>
             {/* First Image - Left, rotated slightly counter-clockwise */}
             <div 
