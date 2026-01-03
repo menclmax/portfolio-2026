@@ -8,6 +8,10 @@ export interface Project {
   about?: string
   aboutImage?: string
   aboutImageDescription?: string
+  aboutImages?: Array<{
+    src: string
+    description?: string
+  }>
   author?: string
   role?: string
   projectUrl?: string
@@ -68,8 +72,24 @@ export const pinnedProjects: Project[] = [
     slug: 'llo-caribbean',
     fullDescription: 'LLO Caribbean is a collaborative educational platform designed to foster lifelong learning and professional development across the Dutch Caribbean and the Netherlands. By uniting leading academic institutions, the project provides a centralized hub for accessible, high-quality courses and training programs.',
     about: 'In a strategic partnership with The Hague University of Applied Sciences, Utrecht University, the University of Curaçao, and the University of Aruba, we were commissioned to design and develop a comprehensive digital ecosystem for regional education. Our objective was to create a unified "Lifelong Learning" (LLO) portal that bridges the geographical gap between the Netherlands and the Caribbean.<br /><br />The resulting platform serves as a sophisticated marketplace and management system where these four institutions can seamlessly publish, manage, and track professional courses.<br /><br />Beyond a simple directory, the solution provides a streamlined application pipeline for users, integrated search and comparison tools, and a robust backend designed to handle cross-institutional data. This digital infrastructure empowers the region by making high-level academic and professional training more accessible than ever before.',
-    aboutImage: '/assets/Screenshot 2025-12-31 at 01.21.59.png',
-    aboutImageDescription: 'LLO Caribbean Homepage - Hero Section',
+    aboutImages: [
+      {
+        src: '/assets/Screenshot 2025-12-31 at 01.21.59.png',
+        description: 'LLO Caribbean Homepage - Hero Section'
+      },
+      {
+        src: '/assets/Screenshot 2026-01-01 at 22.35.42.png',
+        description: ''
+      },
+      {
+        src: '/assets/Screenshot 2026-01-01 at 22.37.16.png',
+        description: ''
+      },
+      {
+        src: '/assets/Screenshot 2026-01-01 at 22.40.21.png',
+        description: ''
+      }
+    ],
     author: 'Max Mencl',
     role: 'Lead UX Designer',
     projectUrl: 'https://llo-caribbean.org/en-US',
@@ -85,11 +105,11 @@ export const pinnedProjects: Project[] = [
     reflection: 'Taking this platform from a blank canvas to a full-scale launch was a defining moment for our team. As this was our first major venture as graduates, the stakes felt incredibly high. Managing the "0 to 100" journey under tight deadlines forced me to evolve quickly from a designer into a strategist. I realized that leadership in this context wasn\'t just about making aesthetic choices; it was about maintaining a clear vision while navigating the logistical complexities of a transatlantic project.<br /><br />The most profound lesson I took away, however, was the necessity of cultural humility in design. Even with a structured process, I learned that a digital solution for the Caribbean requires more than just technical functionality—it requires an awareness of regional nuances and local context. This experience taught me to be more inclusive in my thinking, ensuring that the interface didn\'t just feel like a Dutch export, but a shared space that respected the identity of every island involved.<br /><br />Building this as a new team meant we had to learn the "art of the pivot" in real-time. It sharpened my ability to translate client feedback into actionable iterations without losing momentum.'
   },
   {
-    title: 'E-Commerce Platform',
-    description: 'Modern shopping experience with seamless checkout',
-    image: '/ecommerce-platform.png',
+    title: 'THiNK Fest Website Design & Development',
+    description: 'Website design and development for The Hague University\'s annual festival, featuring an integrated event registration system',
+    image: '/assets/large-og (1).jpg',
     url: '#',
-    slug: 'ecommerce-platform',
+    slug: 'think-fest-website',
     fullDescription: 'Modern shopping experience with seamless checkout and user-friendly interface.',
     about: 'A full-featured e-commerce platform designed to provide the best shopping experience.',
     author: 'Max Mencl',
