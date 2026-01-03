@@ -449,7 +449,7 @@ export default function Home() {
                   } : {})
                 }}
                 className={`transition-all relative inline-block ${
-                  isMobile ? 'cursor-pointer' : ''
+                  isMobile ? `cursor-pointer ${!ahojToggled ? 'ahoj-pulse' : ''}` : ''
                 }`}
               >
                 {isMobile && ahojToggled ? 'Hello!' : 'Ahoj!'}
