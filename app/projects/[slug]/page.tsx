@@ -212,32 +212,91 @@ export default function ProjectPage() {
     }
   }, [isDark, mounted])
 
+  // Update tooltip positions on scroll for mobile
+  useEffect(() => {
+    if (!mounted || !isMobile) return
+
+    const handleScroll = () => {
+      const tooltipGroups = document.querySelectorAll('.design-process-tooltip-group')
+      tooltipGroups.forEach(group => {
+        const textTooltip = group.querySelector('.design-process-tooltip') as HTMLElement
+        const imageTooltip = group.querySelector('.design-process-image-tooltip') as HTMLElement
+        
+        // Only update if tooltip is visible (opacity > 0)
+        if (textTooltip && parseFloat(textTooltip.style.opacity) > 0) {
+          const rect = group.getBoundingClientRect()
+          const screenCenterX = window.innerWidth / 2
+          textTooltip.style.left = `${screenCenterX}px`
+          textTooltip.style.top = `${rect.top - 8}px`
+        }
+        
+        if (imageTooltip && parseFloat(imageTooltip.style.opacity) > 0) {
+          const rect = group.getBoundingClientRect()
+          const screenCenterX = window.innerWidth / 2
+          imageTooltip.style.left = `${screenCenterX}px`
+          imageTooltip.style.top = `${rect.top - 8}px`
+        }
+      })
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [mounted, isMobile])
+
   // Enhance tooltips with dynamic positioning and animations
   useEffect(() => {
-    if (isMobile || !mounted) return
+    if (!mounted) return
 
     const handleMouseEnter = (e: Event) => {
       const group = e.currentTarget as HTMLElement
       const textTooltip = group.querySelector('.design-process-tooltip') as HTMLElement
       const imageTooltip = group.querySelector('.design-process-image-tooltip') as HTMLElement
       
+      // Check if mobile viewport (width < 768px)
+      const isMobileViewport = window.innerWidth < 768
+      const rect = group.getBoundingClientRect()
+      
       if (textTooltip) {
-        const rect = group.getBoundingClientRect()
         textTooltip.style.position = 'fixed'
-        textTooltip.style.left = `${rect.left + rect.width / 2}px`
-        textTooltip.style.top = `${rect.top - 8}px`
-        textTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        if (isMobileViewport) {
+          // Mobile: center horizontally, position vertically near text
+          const screenCenterX = window.innerWidth / 2
+          textTooltip.style.left = `${screenCenterX}px`
+          textTooltip.style.top = `${rect.top - 8}px`
+          textTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        } else {
+          // Desktop: position relative to trigger
+          textTooltip.style.left = `${rect.left + rect.width / 2}px`
+          textTooltip.style.top = `${rect.top - 8}px`
+          textTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        }
         textTooltip.style.opacity = '1'
+        textTooltip.style.zIndex = '1000'
       }
       
       if (imageTooltip) {
-        const rect = group.getBoundingClientRect()
         imageTooltip.style.position = 'fixed'
-        imageTooltip.style.left = `${rect.left + rect.width / 2}px`
-        imageTooltip.style.top = `${rect.top - 8}px`
-        imageTooltip.style.bottom = 'auto'
-        imageTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        
+        if (isMobileViewport) {
+          // Mobile: center horizontally, position vertically near text
+          const screenCenterX = window.innerWidth / 2
+          imageTooltip.style.left = `${screenCenterX}px`
+          imageTooltip.style.top = `${rect.top - 8}px`
+          imageTooltip.style.bottom = 'auto'
+          imageTooltip.style.right = 'auto'
+          imageTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        } else {
+          // Desktop: position relative to trigger
+          const centerX = rect.left + rect.width / 2
+          imageTooltip.style.left = `${centerX}px`
+          imageTooltip.style.top = `${rect.top - 8}px`
+          imageTooltip.style.bottom = 'auto'
+          imageTooltip.style.right = 'auto'
+          imageTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        }
+        
         imageTooltip.style.opacity = '1'
+        imageTooltip.style.zIndex = '1000'
       }
     }
 
@@ -284,8 +343,14 @@ export default function ProjectPage() {
           }
           
           if (textTooltip || imageTooltip) {
+            // Add hover handlers for both desktop and mobile (mobile browsers support hover on tap)
             group.addEventListener('mouseenter', handleMouseEnter)
             group.addEventListener('mouseleave', handleMouseLeave)
+            // Also add touch handlers for better mobile support
+            if (isMobile) {
+              group.addEventListener('touchstart', handleMouseEnter)
+              group.addEventListener('touchend', handleMouseLeave)
+            }
             
             // Mark as enhanced to avoid duplicate listeners
             ;(group as any).__tooltipEnhanced = true
@@ -318,6 +383,8 @@ export default function ProjectPage() {
       tooltipGroups.forEach(group => {
         group.removeEventListener('mouseenter', handleMouseEnter)
         group.removeEventListener('mouseleave', handleMouseLeave)
+        group.removeEventListener('touchstart', handleMouseEnter)
+        group.removeEventListener('touchend', handleMouseLeave)
         ;(group as any).__tooltipEnhanced = false
       })
     }

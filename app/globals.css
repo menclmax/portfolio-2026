@@ -159,6 +159,22 @@ html[data-theme="light"] .design-process-tooltip-group em {
   height: auto;
 }
 
+/* Mobile-specific styles for image tooltips - make them smaller than desktop 500px */
+@media (max-width: 767px) {
+  .design-process-image-tooltip {
+    max-width: 400px !important;
+    width: auto !important;
+  }
+  
+  .design-process-image-tooltip img {
+    max-width: 400px !important;
+    max-height: 70vh !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+}
+
 .design-process-image-tooltip::after {
   content: '';
   position: absolute;
