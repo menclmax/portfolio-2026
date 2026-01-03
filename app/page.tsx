@@ -15,6 +15,7 @@ export default function Home() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
+  const [ahojToggled, setAhojToggled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -430,52 +431,47 @@ export default function Home() {
         <section className="mb-16 w-full overflow-x-hidden">
           <h1 className={`text-4xl md:text-4xl font-bold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
             <span 
-              className="relative group inline-block cursor-pointer touch-manipulation" 
+              className="relative group inline-block touch-manipulation" 
               style={{ fontSize: '1.2em', marginRight: '0.5em' }}
-              data-tooltip-trigger="ahoj"
               onClick={(e) => {
                 if (isMobile) {
                   e.stopPropagation()
-                  setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')
+                  setAhojToggled(!ahojToggled)
                 }
               }}
               onTouchStart={(e) => {
                 if (isMobile) {
                   e.stopPropagation()
-                  setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')
+                  setAhojToggled(!ahojToggled)
                 }
               }}
             >
               <span 
                 style={{ 
-                  fontFamily: 'Metal, cursive',
-                  ...(isMobile ? { borderBottom: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}` } : {})
+                  fontFamily: ahojToggled ? '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif' : 'Metal, cursive',
+                  ...(isMobile ? { 
+                    borderBottom: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
+                    cursor: 'pointer'
+                  } : {})
                 }}
                 className={`transition-all relative inline-block ${
-                  isMobile 
-                    ? activeTooltip === 'ahoj' 
-                      ? 'opacity-80' 
-                      : 'opacity-100'
-                    : ''
+                  isMobile ? 'cursor-pointer' : ''
                 }`}
               >
-                Ahoj!
+                {isMobile && ahojToggled ? 'Hello!' : 'Ahoj!'}
               </span>
               <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
-              <span 
-                className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap transition-all pointer-events-none z-[60] shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent ${
-                  isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
-                } ${
-                  isMobile 
-                    ? activeTooltip === 'ahoj' 
-                      ? 'opacity-100 scale-100 translate-y-0' 
-                      : 'opacity-0 scale-95 translate-y-2'
-                    : 'opacity-0 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 scale-95 translate-y-2'
-                }`} 
-                style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', maxWidth: 'calc(100vw - 2rem)' }}
-              >
-                Slovak for "hello"
-              </span>
+              {/* Desktop tooltip - only show on desktop */}
+              {!isMobile && (
+                <span 
+                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-[60] shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
+                    isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
+                  }" 
+                  style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', maxWidth: 'calc(100vw - 2rem)' }}
+                >
+                  Slovak for "hello"
+                </span>
+              )}
             </span> Max Mencl here!
           </h1>
           <p className={`text-base md:text-lg mb-8 max-w-1xl leading-relaxed break-words w-full ${isDark ? 'text-gray-300' : 'text-gray-600'}`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', maxWidth: '100%', boxSizing: 'border-box' }}>
