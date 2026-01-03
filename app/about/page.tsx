@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function AboutPage() {
@@ -307,7 +308,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 w-full overflow-x-hidden">
+      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 w-full">
         {/* About Section */}
         <section className="mb-16">
           <h1 className={`text-4xl md:text-4xl font-bold mb-3 ${isDark ? 'text-white' : 'text-black'}`}>
@@ -316,9 +317,14 @@ export default function AboutPage() {
           <p className={`text-base md:text-lg mb-12 max-w-1xl leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Get to know me.
           </p>
+        </section>
+      </div>
 
-          {/* Image Gallery - Overlapping Rotated Images with Flip Effect */}
-          <div className="relative mb-16" style={{ height: '350px', perspective: '1000px' }}>
+      {/* Image Gallery - Full width container to accommodate all images */}
+      <div className="w-full overflow-x-hidden mb-16">
+        <div className="max-w-5xl mx-auto px-4 md:px-6">
+          <div className="relative" style={{ height: '350px', perspective: '1000px' }}>
+            <div className="relative mx-auto" style={{ width: '820px', height: '350px', maxWidth: '100%' }}>
             {/* First Image - Left, rotated slightly counter-clockwise */}
             <div 
               className="absolute rounded-lg overflow-hidden shadow-lg flip-card"
@@ -353,11 +359,16 @@ export default function AboutPage() {
                     WebkitBackfaceVisibility: 'hidden'
                   }}
                 >
-                  <img 
-                    src="/assets/IMG_1452.JPG" 
-                    alt="About me" 
-                    className="w-full h-full object-cover rounded-lg"
-                  />
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <Image 
+                      src="/assets/IMG_1452.JPG" 
+                      alt="About me" 
+                      fill
+                      priority
+                      sizes="220px"
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
                 </div>
                 <div 
                   className="flip-card-back rounded-lg"
@@ -422,11 +433,16 @@ export default function AboutPage() {
                     WebkitBackfaceVisibility: 'hidden'
                   }}
                 >
-                  <img 
-                    src="/assets/IMG_2680.JPG" 
-                    alt="About me" 
-                    className="w-full h-full object-cover rounded-lg"
-                  />
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <Image 
+                      src="/assets/IMG_2680.JPG" 
+                      alt="About me" 
+                      fill
+                      priority
+                      sizes="220px"
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
                 </div>
                 <div 
                   className="flip-card-back rounded-lg"
@@ -491,11 +507,16 @@ export default function AboutPage() {
                     WebkitBackfaceVisibility: 'hidden'
                   }}
                 >
-                  <img 
-                    src="/assets/IMG_6704.JPG" 
-                    alt="About me" 
-                    className="w-full h-full object-cover rounded-lg"
-                  />
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <Image 
+                      src="/assets/IMG_6704.JPG" 
+                      alt="About me" 
+                      fill
+                      loading="eager"
+                      sizes="220px"
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
                 </div>
                 <div 
                   className="flip-card-back rounded-lg"
@@ -560,11 +581,16 @@ export default function AboutPage() {
                     WebkitBackfaceVisibility: 'hidden'
                   }}
                 >
-                  <img 
-                    src="/assets/IMG_8467.JPG" 
-                    alt="About me" 
-                    className="w-full h-full object-cover rounded-lg"
-                  />
+                  <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <Image 
+                      src="/assets/IMG_8467.JPG" 
+                      alt="About me" 
+                      fill
+                      loading="eager"
+                      sizes="220px"
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
                 </div>
                 <div 
                   className="flip-card-back rounded-lg"
@@ -594,10 +620,12 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
+        </div>
+      </div>
 
-        </section>
-
+      <div className="max-w-3xl mx-auto px-4 md:px-6 w-full">
         {/* About Text Section */}
         <section className="mb-16">
           <div className="flex flex-col md:flex-row gap-8 md:gap-12">
