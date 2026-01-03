@@ -44,7 +44,7 @@ export interface Project {
 export const pinnedProjects: Project[] = [
   {
     title: 'Campus Connext',
-    description: 'Mobile app connecting university students with campus life',
+    description: 'CampusConnext is an all-in-one student app platform designed to centralize the fragmented university experience',
     image: '/assets/cc.png',
     url: '#',
     slug: 'campus-connext',
@@ -66,7 +66,7 @@ export const pinnedProjects: Project[] = [
   },
   {
     title: 'LLO Caribbean',
-    description: 'Educational platform for Dutch & Caribbean Universities',
+    description: 'LLO-Caribbean is a collaborative "Leven Lang Ontwikkelen" (Lifelong Learning) platform bridging the Netherlands and the Caribbean islands of the Dutch Kingdom',
     image: '/assets/llo-cover.png',
     url: '#',
     slug: 'llo-caribbean',
@@ -106,7 +106,7 @@ export const pinnedProjects: Project[] = [
   },
   {
     title: 'THiNK Fest Website Design & Development',
-    description: 'Website design and development for The Hague University\'s annual festival, featuring an integrated event registration system',
+    description: 'THiNK Fest is a digital platform for The Hague University of Applied Sciences (THUAS) annual festival',
     image: '/assets/thinkfest-cover.jpg',
     url: '#',
     slug: 'think-fest-website',
@@ -117,13 +117,13 @@ export const pinnedProjects: Project[] = [
     projectUrl: '#'
   },
   {
-    title: 'Design System',
-    description: 'Comprehensive component library and guidelines',
-    image: '/design-system.png',
+    title: 'ExamenTool',
+    description: 'ExamenTool is a bespoke SaaS solution designed to digitize and automate the complex lifecycle of university exam registration.',
+    image: '/assets/examentool-cover.jpg',
     url: '#',
-    slug: 'design-system',
-    fullDescription: 'Comprehensive component library and design guidelines for consistent UI development.',
-    about: 'A complete design system that ensures consistency across all digital products.',
+    slug: 'examentool',
+    fullDescription: 'ExamenTool is a digital platform designed for exam management and administration.',
+    about: 'ExamenTool provides a comprehensive solution for managing and administering exams.',
     author: 'Max Mencl',
     role: '2024',
     projectUrl: '#'
