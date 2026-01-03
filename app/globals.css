@@ -235,4 +235,24 @@ html[data-theme="light"] .design-process-image-tooltip::after {
   }
 }
 
+/* Pulsing animation for university links */
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.university-link {
+  animation: textPulse 2s ease-in-out infinite;
+  text-decoration: none;
+  color: black;
+}
+
+html[data-theme="dark"] .university-link {
+  color: white;
+}
+
 

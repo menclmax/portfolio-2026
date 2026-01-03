@@ -390,32 +390,74 @@ export default function ProjectPage() {
     }
   }, [mounted, isMobile, project])
 
-  // Function to add flag icons before university names
+  // Function to add flag icons before university names and hyperlinks
   const renderAboutWithFlags = (text: string) => {
-    const universityFlags: { [key: string]: { code: string, name: string } } = {
-      'The Hague University of Applied Sciences': { code: 'nl', name: 'Netherlands' },
-      'Utrecht University': { code: 'nl', name: 'Netherlands' },
-      'University of Curaçao': { code: 'cw', name: 'Curaçao' },
-      'University of Aruba': { code: 'aw', name: 'Aruba' }
+    const universityFlags: { [key: string]: { code: string, name: string, url: string } } = {
+      'The Hague University of Applied Sciences': { code: 'nl', name: 'Netherlands', url: 'https://www.thehagueuniversity.com/' },
+      'Utrecht University': { code: 'nl', name: 'Netherlands', url: 'https://www.uu.nl/en' },
+      'University of Curaçao': { code: 'cw', name: 'Curaçao', url: 'https://www.uoc.cw/' },
+      'University of Aruba': { code: 'aw', name: 'Aruba', url: 'https://www.ua.aw/' }
     }
 
     let processedText = text
     const flagImg = (code: string, name: string) => 
       `<img src="https://hatscripts.github.io/circle-flags/flags/${code}.svg" alt="${name} flag" style="width: 1rem; height: 1rem; border-radius: 50%; vertical-align: middle; display: inline; margin-right: 0.375rem;" />`
     
+    const createLink = (university: string, content: string) => {
+      const universityData = universityFlags[university]
+      if (!universityData) return content
+      return `<a href="${universityData.url}" target="_blank" rel="noopener noreferrer" class="university-link">${content}</a>`
+    }
+    
     // First, handle cases where "the" appears before University of Curaçao/Aruba
-    // This ensures the flag appears before "the"
+    // This ensures the flag appears before "the" and wraps the whole phrase in a link
     const flagCw = universityFlags['University of Curaçao']
     const flagAw = universityFlags['University of Aruba']
     
-    // Match "the University of Curaçao" and place flag before "the"
-    processedText = processedText.replace(/\bthe\s+University of Curaçao/gi, (match) => {
-      return flagImg(flagCw.code, flagCw.name) + match
+    // Match "the University of Curaçao" and place flag before "the", wrap in link
+    processedText = processedText.replace(/\bthe\s+University of Curaçao/gi, (match, offset) => {
+      const beforeMatch = processedText.substring(0, offset)
+      const openTags = (beforeMatch.match(/<a[^>]*>/g) || []).length
+      const closeTags = (beforeMatch.match(/<\/a>/g) || []).length
+      if (openTags > closeTags) return match
+      
+      const flag = flagImg(flagCw.code, flagCw.name)
+      return flag + createLink('University of Curaçao', match)
     })
     
-    // Match "the University of Aruba" and place flag before "the"
-    processedText = processedText.replace(/\bthe\s+University of Aruba/gi, (match) => {
-      return flagImg(flagAw.code, flagAw.name) + match
+    // Match "the University of Aruba" and place flag before "the", wrap in link
+    processedText = processedText.replace(/\bthe\s+University of Aruba/gi, (match, offset) => {
+      const beforeMatch = processedText.substring(0, offset)
+      const openTags = (beforeMatch.match(/<a[^>]*>/g) || []).length
+      const closeTags = (beforeMatch.match(/<\/a>/g) || []).length
+      if (openTags > closeTags) return match
+      
+      const flag = flagImg(flagAw.code, flagAw.name)
+      return flag + createLink('University of Aruba', match)
+    })
+    
+    // Handle "University of Curaçao" and "University of Aruba" without "the"
+    // Note: These will be skipped if already inside a link (from "the University of..." above)
+    processedText = processedText.replace(/\bUniversity of Curaçao\b/gi, (match, offset) => {
+      const beforeMatch = processedText.substring(0, offset)
+      const openTags = (beforeMatch.match(/<a[^>]*>/g) || []).length
+      const closeTags = (beforeMatch.match(/<\/a>/g) || []).length
+      // Skip if already inside an anchor tag (would be the case if "the University of Curaçao" was processed)
+      if (openTags > closeTags) return match
+      
+      const flag = flagImg(flagCw.code, flagCw.name)
+      return flag + createLink('University of Curaçao', match)
+    })
+    
+    processedText = processedText.replace(/\bUniversity of Aruba\b/gi, (match, offset) => {
+      const beforeMatch = processedText.substring(0, offset)
+      const openTags = (beforeMatch.match(/<a[^>]*>/g) || []).length
+      const closeTags = (beforeMatch.match(/<\/a>/g) || []).length
+      // Skip if already inside an anchor tag (would be the case if "the University of Aruba" was processed)
+      if (openTags > closeTags) return match
+      
+      const flag = flagImg(flagAw.code, flagAw.name)
+      return flag + createLink('University of Aruba', match)
     })
     
     // Then process all other university names (in reverse order to handle longer names first)
@@ -431,11 +473,15 @@ export default function ProjectPage() {
       processedText = processedText.replace(regex, (match, offset) => {
         // Skip if already inside HTML (already processed)
         const beforeMatch = processedText.substring(0, offset)
+        const openTags = (beforeMatch.match(/<a[^>]*>/g) || []).length
+        const closeTags = (beforeMatch.match(/<\/a>/g) || []).length
         const openSpans = (beforeMatch.match(/<span[^>]*>/g) || []).length
         const closeSpans = (beforeMatch.match(/<\/span>/g) || []).length
-        if (openSpans > closeSpans) return match
+        // Skip if already inside an anchor tag or span
+        if (openTags > closeTags || openSpans > closeSpans) return match
         
-        return flagImg(flag.code, flag.name) + match
+        const flagIcon = flagImg(flag.code, flag.name)
+        return flagIcon + createLink(university, match)
       })
     })
 
