@@ -429,7 +429,7 @@ export default function Home() {
       <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 w-full overflow-x-hidden">
         {/* Hero Section */}
         <section className="mb-16 w-full overflow-x-hidden">
-          <h1 className={`text-4xl md:text-4xl font-bold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
+          <h1 className={`text-4xl md:text-4xl font-bold mb-6 leading-tight ${isDark ? 'text-white' : 'text-black'}`} style={{ lineHeight: '1.2', overflow: 'visible' }}>
             <span 
               className="relative group inline-block touch-manipulation" 
               style={{ fontSize: '1.2em', marginRight: '0.5em' }}
@@ -444,6 +444,8 @@ export default function Home() {
               <span 
                 style={{ 
                   fontFamily: 'Metal, cursive',
+                  lineHeight: '1.2',
+                  overflow: 'visible',
                   ...(isMobile ? { 
                     cursor: 'pointer'
                   } : {})
