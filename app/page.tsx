@@ -214,6 +214,7 @@ export default function Home() {
               }}
               className="p-2 hover:opacity-70 transition-opacity relative"
               aria-label="Toggle theme"
+              style={{ color: isDark ? '#ffffff' : '#000000' }}
             >
               <div className="relative w-5 h-5 flex items-center justify-center">
                 {isDark ? (
@@ -227,7 +228,8 @@ export default function Home() {
                     strokeWidth="2" 
                     strokeLinecap="round" 
                     strokeLinejoin="round"
-                    className={`transition-all duration-300 ${isAnimating ? 'theme-toggle-animate' : ''}`}
+                    className={isAnimating ? 'theme-toggle-animate' : ''}
+                    style={{ color: isDark ? '#ffffff' : '#000000' }}
                   >
                     <circle cx="12" cy="12" r="5"></circle>
                     <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -250,7 +252,8 @@ export default function Home() {
                     strokeWidth="2" 
                     strokeLinecap="round" 
                     strokeLinejoin="round"
-                    className={`transition-all duration-300 ${isAnimating ? 'theme-toggle-animate' : ''}`}
+                    className={isAnimating ? 'theme-toggle-animate' : ''}
+                    style={{ color: isDark ? '#ffffff' : '#000000' }}
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                   </svg>
@@ -264,6 +267,7 @@ export default function Home() {
               className="md:hidden p-2 hover:opacity-70 transition-opacity"
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
+              style={{ color: isDark ? '#ffffff' : '#000000' }}
             >
               {isMobileMenuOpen ? (
                 <svg 
@@ -275,6 +279,7 @@ export default function Home() {
                   strokeWidth="2" 
                   strokeLinecap="round" 
                   strokeLinejoin="round"
+                  style={{ color: isDark ? '#ffffff' : '#000000' }}
                 >
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -289,6 +294,7 @@ export default function Home() {
                   strokeWidth="2" 
                   strokeLinecap="round" 
                   strokeLinejoin="round"
+                  style={{ color: isDark ? '#ffffff' : '#000000' }}
                 >
                   <line x1="3" y1="12" x2="21" y2="12"></line>
                   <line x1="3" y1="6" x2="21" y2="6"></line>
