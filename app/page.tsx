@@ -16,6 +16,7 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false)
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
   const [ahojToggled, setAhojToggled] = useState(false)
+  const [ahojTimeout, setAhojTimeout] = useState<NodeJS.Timeout | null>(null)
   const [timeTooltipTimeout, setTimeTooltipTimeout] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -85,6 +86,15 @@ export default function Home() {
     }
   }, [])
 
+  // Cleanup ahoj timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (ahojTimeout) {
+        clearTimeout(ahojTimeout)
+      }
+    }
+  }, [ahojTimeout])
+
   useEffect(() => {
     if (mounted) {
       localStorage.setItem('theme', isDark ? 'dark' : 'light')
@@ -112,8 +122,8 @@ export default function Home() {
   const socialButtons = [
     { name: 'LinkedIn', url: 'https://www.linkedin.com/in/maxmencl/' },
     { name: 'Instagram', url: 'https://instagram.com/maxmencl' },
-    { name: 'Discord', url: 'https://discord.gg/FkNrqrQPyx' },
-    { name: 'YouTube', url: 'https://www.youtube.com/maxmencl' }
+    { name: 'YouTube', url: 'https://www.youtube.com/maxmencl' },
+    { name: 'GitHub', url: 'https://github.com/menclmax' }
   ]
 
 
@@ -448,7 +458,18 @@ export default function Home() {
                 if (isMobile) {
                   e.preventDefault()
                   e.stopPropagation()
-                  setAhojToggled(!ahojToggled)
+                  // Clear any existing timeout
+                  if (ahojTimeout) {
+                    clearTimeout(ahojTimeout)
+                  }
+                  // Immediately change to "Hello!"
+                  setAhojToggled(true)
+                  // Automatically change back to "Ahoj!" after 2 seconds
+                  const timeout = setTimeout(() => {
+                    setAhojToggled(false)
+                    setAhojTimeout(null)
+                  }, 2000)
+                  setAhojTimeout(timeout)
                 }
               }}
               onMouseEnter={(e) => {
@@ -607,14 +628,14 @@ export default function Home() {
           </p>
 
           {/* Social Buttons */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-nowrap md:flex-wrap gap-2 md:gap-3">
             {socialButtons.map((button, index) => (
               <a
                 key={index}
                 href={button.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors group ${isDark ? 'bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white' : 'bg-gray-200 hover:bg-gray-300 text-black'}`}
+                className={`flex items-center gap-0 px-2 md:px-3 py-1 md:py-1.5 rounded-full text-xs font-medium transition-colors group flex-shrink-0 ${isDark ? 'bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white' : 'bg-gray-200 hover:bg-gray-300 text-black'}`}
               >
                 {button.name}
                 <svg 
@@ -718,16 +739,7 @@ export default function Home() {
             >
               mencl.max1@gmail.com
             </a>
-            {' '}for business. Join my{' '}
-            <a 
-              href="https://discord.gg/FkNrqrQPyx" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:opacity-70 transition-opacity"
-            >
-              Discord
-            </a>
-            {' '}community or connect with me on the platforms below.
+            {' '}for business. Connect with me on the platforms below.
           </p>
           <div className="flex flex-col items-start gap-3">
             <a 
