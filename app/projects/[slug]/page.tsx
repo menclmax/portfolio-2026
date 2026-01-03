@@ -36,16 +36,23 @@ export default function ProjectPage() {
   const testimonialsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let rafId: number | null = null
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0)
       
-      // Calculate scroll progress for mobile reading progress bar
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight
-      const scrollTop = window.scrollY
-      const scrollableHeight = documentHeight - windowHeight
-      const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0
-      setScrollProgress(Math.min(100, Math.max(0, progress)))
+      // Calculate scroll progress for mobile reading progress bar (optimized)
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          const windowHeight = window.innerHeight
+          const documentHeight = document.documentElement.scrollHeight
+          const scrollTop = window.scrollY
+          const scrollableHeight = documentHeight - windowHeight
+          const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0
+          setScrollProgress(Math.min(100, Math.max(0, progress)))
+          rafId = null
+        })
+      }
       
       // Check if scrolled past author section
       if (authorSectionRef.current) {
@@ -125,9 +132,14 @@ export default function ProjectPage() {
       }
     }
     
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll() // Check initial position
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -520,10 +532,11 @@ export default function ProjectPage() {
           }}
         >
           <div 
-            className="h-full transition-all duration-150 ease-out"
+            className="h-full origin-left"
             style={{ 
-              width: `${scrollProgress}%`,
-              backgroundColor: isDark ? '#ffffff' : '#000000'
+              transform: `scaleX(${scrollProgress / 100})`,
+              backgroundColor: isDark ? '#ffffff' : '#000000',
+              willChange: 'transform'
             }}
           />
         </div>
