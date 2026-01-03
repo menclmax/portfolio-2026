@@ -16,6 +16,7 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false)
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
   const [ahojToggled, setAhojToggled] = useState(false)
+  const [timeTooltipTimeout, setTimeTooltipTimeout] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,14 +125,24 @@ export default function Home() {
       const target = e.target as HTMLElement
       // Check if click is outside tooltip elements
       if (!target.closest('.relative.group') && !target.closest('[data-tooltip-trigger]')) {
+        // Clear timeout if tooltip is closing
+        if (timeTooltipTimeout) {
+          clearTimeout(timeTooltipTimeout)
+          setTimeTooltipTimeout(null)
+        }
         setActiveTooltip(null)
       }
     }
     
     // Use a slight delay to allow click events to process first
     document.addEventListener('click', handleClickOutside, true)
-    return () => document.removeEventListener('click', handleClickOutside, true)
-  }, [isMobile, activeTooltip])
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true)
+      if (timeTooltipTimeout) {
+        clearTimeout(timeTooltipTimeout)
+      }
+    }
+  }, [isMobile, activeTooltip, timeTooltipTimeout])
 
   return (
     <main className="min-h-screen transition-colors overflow-x-hidden w-full" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
@@ -469,7 +480,30 @@ export default function Home() {
                   isMobile ? `cursor-pointer ${!ahojToggled ? 'ahoj-pulse' : ''}` : ''
                 }`}
               >
-                {isMobile && ahojToggled ? 'Hello!' : 'Ahoj!'}
+                {isMobile ? (
+                  <>
+                    <span 
+                      className={`inline-block transition-all duration-300 ease-in-out ${
+                        !ahojToggled 
+                          ? 'opacity-100 scale-100 translate-y-0 relative' 
+                          : 'opacity-0 scale-95 translate-y-2 absolute left-0 pointer-events-none'
+                      }`}
+                    >
+                      Ahoj!
+                    </span>
+                    <span 
+                      className={`inline-block transition-all duration-300 ease-in-out ${
+                        ahojToggled 
+                          ? 'opacity-100 scale-100 translate-y-0 relative' 
+                          : 'opacity-0 scale-95 -translate-y-2 absolute left-0 pointer-events-none'
+                      }`}
+                    >
+                      Hello!
+                    </span>
+                  </>
+                ) : (
+                  'Ahoj!'
+                )}
               </span>
               <span 
                 className="absolute left-1/2 w-1 h-1 rounded-full pulse-dot" 
@@ -518,8 +552,38 @@ export default function Home() {
             <span 
               className="relative group inline-block cursor-pointer touch-manipulation" 
               style={{ maxWidth: '100%' }}
-              onClick={() => isMobile && setActiveTooltip(activeTooltip === 'time' ? null : 'time')}
-              onTouchStart={() => isMobile && setActiveTooltip(activeTooltip === 'time' ? null : 'time')}
+              onClick={() => {
+                if (isMobile) {
+                  // Clear any existing timeout
+                  if (timeTooltipTimeout) {
+                    clearTimeout(timeTooltipTimeout)
+                  }
+                  // Show tooltip
+                  setActiveTooltip('time')
+                  // Set timeout to hide after 2 seconds
+                  const timeout = setTimeout(() => {
+                    setActiveTooltip(null)
+                    setTimeTooltipTimeout(null)
+                  }, 2000)
+                  setTimeTooltipTimeout(timeout)
+                }
+              }}
+              onTouchStart={() => {
+                if (isMobile) {
+                  // Clear any existing timeout
+                  if (timeTooltipTimeout) {
+                    clearTimeout(timeTooltipTimeout)
+                  }
+                  // Show tooltip
+                  setActiveTooltip('time')
+                  // Set timeout to hide after 2 seconds
+                  const timeout = setTimeout(() => {
+                    setActiveTooltip(null)
+                    setTimeTooltipTimeout(null)
+                  }, 2000)
+                  setTimeTooltipTimeout(timeout)
+                }
+              }}
             >
               (<span className={`underline transition-opacity ${isMobile && activeTooltip === 'time' ? 'opacity-80' : ''}`}>GMT+1</span>).
               {amsterdamTime && (
