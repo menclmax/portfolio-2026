@@ -504,7 +504,7 @@ export default function Home() {
                 {isMobile ? (
                   <>
                     <span 
-                      className={`inline-block transition-all duration-300 ease-in-out ${
+                      className={`inline-block transition-all duration-300 ease-in-out pr-2 ${
                         !ahojToggled 
                           ? 'opacity-100 scale-100 translate-y-0 relative' 
                           : 'opacity-0 scale-95 translate-y-2 absolute left-0 pointer-events-none'
@@ -513,7 +513,7 @@ export default function Home() {
                       Ahoj!
                     </span>
                     <span 
-                      className={`inline-block transition-all duration-300 ease-in-out ${
+                      className={`inline-block transition-all duration-300 ease-in-out pr-2 ${
                         ahojToggled 
                           ? 'opacity-100 scale-100 translate-y-0 relative' 
                           : 'opacity-0 scale-95 -translate-y-2 absolute left-0 pointer-events-none'
@@ -523,7 +523,7 @@ export default function Home() {
                     </span>
                   </>
                 ) : (
-                  'Ahoj!'
+                  <span className="pr-2">Ahoj!</span>
                 )}
               </span>
               <span 
