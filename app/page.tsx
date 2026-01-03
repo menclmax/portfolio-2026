@@ -432,7 +432,7 @@ export default function Home() {
             <h1 className={`text-4xl md:text-4xl font-bold mb-6 leading-tight ${isDark ? 'text-white' : 'text-black'}`} style={{ lineHeight: '1.2', overflow: 'visible' }}>
             <span 
               className="relative group inline-block touch-manipulation" 
-              style={{ fontSize: '1.2em', marginRight: '0.5em' }}
+              style={{ fontSize: '1.2em', marginRight: '0.5em', paddingBottom: isMobile ? '0.5rem' : '0' }}
               onClick={(e) => {
                 if (isMobile) {
                   e.preventDefault()
@@ -444,9 +444,10 @@ export default function Home() {
               <span 
                 style={{ 
                   fontFamily: 'Metal, cursive',
-                  lineHeight: '1.2',
+                  lineHeight: '1.4',
                   overflow: 'visible',
                   maxWidth: 'none',
+                  display: 'inline-block',
                   ...(isMobile ? { 
                     cursor: 'pointer'
                   } : {})
@@ -457,7 +458,9 @@ export default function Home() {
               >
                 {isMobile && ahojToggled ? 'Hello!' : 'Ahoj!'}
               </span>
-              <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
+              {!isMobile && (
+                <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
+              )}
               {/* Desktop tooltip - only show on desktop */}
               {!isMobile && (
                 <span 
