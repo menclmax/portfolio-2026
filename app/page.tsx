@@ -426,7 +426,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 w-full overflow-x-hidden">
+      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 w-full overflow-x-hidden" style={{ overflowY: 'visible' }}>
         {/* Hero Section */}
           <section className="mb-16 w-full" style={{ overflow: 'visible', position: 'relative' }}>
             <h1 className={`text-4xl md:text-4xl font-bold mb-6 leading-tight ${isDark ? 'text-white' : 'text-black'}`} style={{ lineHeight: '1.2', overflow: 'visible', position: 'relative', zIndex: 100 }}>
@@ -438,6 +438,27 @@ export default function Home() {
                   e.preventDefault()
                   e.stopPropagation()
                   setAhojToggled(!ahojToggled)
+                }
+              }}
+              onMouseEnter={(e) => {
+                if (!isMobile) {
+                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement
+                  if (tooltip) {
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    tooltip.style.left = `${rect.left + rect.width / 2}px`
+                    tooltip.style.top = `${rect.top - 8}px`
+                    tooltip.style.transform = 'translate(-50%, -100%)'
+                  }
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isMobile) {
+                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement
+                  if (tooltip) {
+                    tooltip.style.left = ''
+                    tooltip.style.top = ''
+                    tooltip.style.transform = ''
+                  }
                 }
               }}
             >
@@ -465,7 +486,8 @@ export default function Home() {
                   <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
                   {/* Desktop tooltip */}
                   <span 
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-[100] shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
+                    data-tooltip
+                    className="px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
                       isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
                     }" 
                     style={{ 
@@ -473,7 +495,11 @@ export default function Home() {
                       maxWidth: 'calc(100vw - 2rem)',
                       backgroundColor: isDark ? '#ffffff' : '#000000',
                       color: isDark ? '#000000' : '#ffffff',
-                      zIndex: 100
+                      zIndex: 100,
+                      position: 'fixed',
+                      left: '50%',
+                      top: '0',
+                      transform: 'translate(-50%, -100%)'
                     }}
                   >
                     Slovak for "hello"
