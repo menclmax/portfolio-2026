@@ -606,7 +606,51 @@ export default function AboutPage() {
             </h2>
             <div className="flex-1 space-y-4">
               <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                <span className="design-process-tooltip-group relative inline-block"><em className="cursor-pointer">Ahoj</em><span className="design-process-tooltip">Slovak for "hello"</span></span>, I'm Max Mencl! Originally from Slovakia, I'm now based in the vibrant place that is The Hague, Netherlands.
+                <span 
+                  className="relative group inline-block"
+                  onMouseEnter={(e) => {
+                    if (!isMobile) {
+                      const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement
+                      if (tooltip) {
+                        const rect = e.currentTarget.getBoundingClientRect()
+                        tooltip.style.left = `${rect.left + rect.width / 2}px`
+                        tooltip.style.top = `${rect.top - 8}px`
+                        tooltip.style.transform = 'translate(-50%, -100%)'
+                      }
+                    }
+                  }}
+                >
+                  <em className="cursor-pointer">Ahoj</em>
+                  {!isMobile && (
+                    <>
+                      {/* Desktop tooltip */}
+                      <span 
+                        data-tooltip
+                        className="px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-lg relative scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0"
+                        style={{ 
+                          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+                          maxWidth: 'calc(100vw - 2rem)',
+                          backgroundColor: isDark ? '#ffffff' : '#000000',
+                          color: isDark ? '#000000' : '#ffffff',
+                          zIndex: 100,
+                          position: 'fixed',
+                          left: '50%',
+                          top: '0',
+                          transform: 'translate(-50%, -100%)'
+                        }}
+                      >
+                        Slovak for "hello"
+                        <span 
+                          className="absolute top-full left-1/2 transform -translate-x-1/2"
+                          style={{
+                            border: '4px solid transparent',
+                            borderTopColor: isDark ? '#ffffff' : '#000000'
+                          }}
+                        ></span>
+                      </span>
+                    </>
+                  )}
+                </span>, I'm Max Mencl! Originally from Slovakia, I'm now based in the vibrant place that is The Hague, Netherlands.
               </p>
               <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 My passion for design and digital experiences began early, which naturally led me to pursue a career in UX design. I've been working as a UX Designer, specializing in user experience, digital marketing, and videography, for several years now!

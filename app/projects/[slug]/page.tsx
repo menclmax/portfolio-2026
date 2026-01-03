@@ -212,6 +212,117 @@ export default function ProjectPage() {
     }
   }, [isDark, mounted])
 
+  // Enhance tooltips with dynamic positioning and animations
+  useEffect(() => {
+    if (isMobile || !mounted) return
+
+    const handleMouseEnter = (e: Event) => {
+      const group = e.currentTarget as HTMLElement
+      const textTooltip = group.querySelector('.design-process-tooltip') as HTMLElement
+      const imageTooltip = group.querySelector('.design-process-image-tooltip') as HTMLElement
+      
+      if (textTooltip) {
+        const rect = group.getBoundingClientRect()
+        textTooltip.style.position = 'fixed'
+        textTooltip.style.left = `${rect.left + rect.width / 2}px`
+        textTooltip.style.top = `${rect.top - 8}px`
+        textTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        textTooltip.style.opacity = '1'
+      }
+      
+      if (imageTooltip) {
+        const rect = group.getBoundingClientRect()
+        imageTooltip.style.position = 'fixed'
+        imageTooltip.style.left = `${rect.left + rect.width / 2}px`
+        imageTooltip.style.top = `${rect.top - 8}px`
+        imageTooltip.style.bottom = 'auto'
+        imageTooltip.style.transform = 'translate(-50%, -100%) scale(1)'
+        imageTooltip.style.opacity = '1'
+      }
+    }
+
+    const handleMouseLeave = (e: Event) => {
+      const group = e.currentTarget as HTMLElement
+      const textTooltip = group.querySelector('.design-process-tooltip') as HTMLElement
+      const imageTooltip = group.querySelector('.design-process-image-tooltip') as HTMLElement
+      
+      if (textTooltip) {
+        textTooltip.style.opacity = '0'
+        textTooltip.style.transform = 'translate(-50%, calc(-100% + 8px)) scale(0.95)'
+      }
+      
+      if (imageTooltip) {
+        imageTooltip.style.opacity = '0'
+        imageTooltip.style.transform = 'translate(-50%, calc(-100% + 8px)) scale(0.95)'
+      }
+    }
+
+    const enhanceTooltips = () => {
+      const tooltipGroups = document.querySelectorAll('.design-process-tooltip-group')
+      
+      tooltipGroups.forEach(group => {
+        const textTooltip = group.querySelector('.design-process-tooltip') as HTMLElement
+        const imageTooltip = group.querySelector('.design-process-image-tooltip') as HTMLElement
+        
+        if (!(group as any).__tooltipEnhanced) {
+          if (textTooltip) {
+            // Update text tooltip styles to match homepage
+            textTooltip.style.transition = 'opacity 0.3s ease, transform 0.3s ease'
+            textTooltip.style.opacity = '0'
+            textTooltip.style.transform = 'translate(-50%, calc(-100% + 8px)) scale(0.95)'
+            textTooltip.style.zIndex = '100'
+            textTooltip.style.position = 'fixed'
+          }
+          
+          if (imageTooltip) {
+            // Update image tooltip styles - positioned above
+            imageTooltip.style.transition = 'opacity 0.3s ease, transform 0.3s ease'
+            imageTooltip.style.opacity = '0'
+            imageTooltip.style.transform = 'translate(-50%, calc(-100% + 8px)) scale(0.95)'
+            imageTooltip.style.zIndex = '100'
+            imageTooltip.style.position = 'fixed'
+          }
+          
+          if (textTooltip || imageTooltip) {
+            group.addEventListener('mouseenter', handleMouseEnter)
+            group.addEventListener('mouseleave', handleMouseLeave)
+            
+            // Mark as enhanced to avoid duplicate listeners
+            ;(group as any).__tooltipEnhanced = true
+          }
+        }
+      })
+    }
+
+    // Wait for content to be rendered, then enhance tooltips
+    const timeoutId = setTimeout(enhanceTooltips, 200)
+    
+    // Also use MutationObserver to catch dynamically added content
+    const observer = new MutationObserver(() => {
+      enhanceTooltips()
+    })
+    
+    const mainContent = document.querySelector('main')
+    if (mainContent) {
+      observer.observe(mainContent, {
+        childList: true,
+        subtree: true
+      })
+    }
+
+    return () => {
+      clearTimeout(timeoutId)
+      observer.disconnect()
+      // Clean up event listeners
+      const tooltipGroups = document.querySelectorAll('.design-process-tooltip-group')
+      tooltipGroups.forEach(group => {
+        group.removeEventListener('mouseenter', handleMouseEnter)
+        group.removeEventListener('mouseleave', handleMouseLeave)
+        ;(group as any).__tooltipEnhanced = false
+      })
+    }
+  }, [mounted, isMobile, project])
+
   // Function to add flag icons before university names
   const renderAboutWithFlags = (text: string) => {
     const universityFlags: { [key: string]: { code: string, name: string } } = {
@@ -524,7 +635,7 @@ export default function ProjectPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 pt-24 relative w-full overflow-x-hidden">
+      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 pt-6 md:pt-24 relative w-full overflow-x-hidden">
         {/* Fixed Sidebar Menu */}
         <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
           <nav className="space-y-4">
@@ -761,10 +872,11 @@ export default function ProjectPage() {
                 <div style={{ marginTop: '48px' }}>
                   <div className="relative">
                     <div 
-                      className="p-4 rounded-lg relative overflow-hidden"
+                      className={`${isMobile ? 'rounded-lg' : 'p-4 rounded-lg'} relative overflow-hidden`}
                       style={{
-                        border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
-                        backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                        border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                        backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
+                        boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
                       }}
                     >
                       {/* Carousel Images */}
@@ -779,7 +891,7 @@ export default function ProjectPage() {
                             <img 
                               src={image.src} 
                               alt={`${project.title} - Image ${index + 1}`}
-                              className="w-full h-auto rounded-lg"
+                              className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
                             />
                           </div>
                         ))}
@@ -862,16 +974,17 @@ export default function ProjectPage() {
               ) : project.aboutImage ? (
                 <div style={{ marginTop: '48px' }}>
                   <div 
-                    className="p-4 rounded-lg"
+                    className={isMobile ? 'rounded-lg overflow-hidden' : 'p-4 rounded-lg'}
                     style={{
-                      border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
-                      backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                      border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                      backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
+                      boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
                     }}
                   >
                     <img 
                       src={project.aboutImage} 
                       alt={project.title}
-                      className="w-full h-auto rounded-lg"
+                      className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
                     />
                   </div>
                   {project.aboutImageDescription && (
@@ -888,16 +1001,17 @@ export default function ProjectPage() {
           {project.detailImage && (
             <div className="mb-8">
               <div 
-                className="p-4 rounded-lg"
+                className={isMobile ? 'rounded-lg overflow-hidden' : 'p-4 rounded-lg'}
                 style={{
-                  border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
-                  backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                  border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                  backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
+                  boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
                 }}
               >
                 <img 
                   src={project.detailImage} 
                   alt={project.title}
-                  className="w-full h-auto rounded-lg"
+                  className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
                 />
               </div>
               {project.detailImageDescription ? (
@@ -919,16 +1033,17 @@ export default function ProjectPage() {
                   </p>
                   <div>
                     <div 
-                      className="p-4 rounded-lg"
+                      className={isMobile ? 'rounded-lg overflow-hidden' : 'p-4 rounded-lg'}
                       style={{
-                        border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
-                        backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                        border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                        backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
+                        boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
                       }}
                     >
                       <img 
                         src="/assets/1734032789373.jpeg" 
                         alt={project.title}
-                        className="w-full h-auto rounded-lg"
+                        className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
                       />
                     </div>
                     <p className={`text-sm text-center mt-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -998,16 +1113,17 @@ export default function ProjectPage() {
                       <div key={index}>
                         <div className="mt-8 mb-8">
                           <div 
-                            className="p-4 rounded-lg"
+                            className={isMobile ? 'rounded-lg overflow-hidden' : 'p-4 rounded-lg'}
                             style={{
-                              border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
-                              backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                              border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                              backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
+                              boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
                             }}
                           >
                             <img 
                               src={imagePath} 
                               alt={description || `Prototyping ${index}`}
-                              className="w-full h-auto rounded-lg"
+                              className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
                             />
                           </div>
                           {description && (
@@ -1051,10 +1167,10 @@ export default function ProjectPage() {
                 Figma Prototype
               </h2>
               <div 
-                className="p-4 rounded-lg"
+                className={isMobile ? '' : 'p-4 rounded-lg'}
                 style={{
-                  border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
-                  backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                  border: isMobile ? 'none' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                  backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9')
                 }}
               >
                 <iframe
@@ -1079,16 +1195,17 @@ export default function ProjectPage() {
           {project.detailImage2 && (
             <div ref={detailImage2Ref} className="mb-8">
               <div 
-                className="p-4 rounded-lg"
+                className={isMobile ? 'rounded-lg overflow-hidden' : 'p-4 rounded-lg'}
                 style={{
-                  border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
-                  backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                  border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                  backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
+                  boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
                 }}
               >
                 <img 
                   src={project.detailImage2} 
                   alt={project.title}
-                  className="w-full h-auto rounded-lg"
+                  className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
                 />
               </div>
               {project.detailImage2Description ? (
