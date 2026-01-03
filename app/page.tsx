@@ -445,7 +445,6 @@ export default function Home() {
                 style={{ 
                   fontFamily: 'Metal, cursive',
                   ...(isMobile ? { 
-                    borderBottom: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
                     cursor: 'pointer'
                   } : {})
                 }}
