@@ -451,16 +451,6 @@ export default function Home() {
                   }
                 }
               }}
-              onMouseLeave={(e) => {
-                if (!isMobile) {
-                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement
-                  if (tooltip) {
-                    tooltip.style.left = ''
-                    tooltip.style.top = ''
-                    tooltip.style.transform = ''
-                  }
-                }
-              }}
             >
               <span 
                 style={{ 
