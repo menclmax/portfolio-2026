@@ -477,8 +477,8 @@ export default function Home() {
                   {/* Desktop tooltip */}
                   <span 
                     data-tooltip
-                    className="px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
-                      isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
+                    className="px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-lg relative scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
+                      isDark ? 'bg-white text-black' : 'bg-black text-white'
                     }" 
                     style={{ 
                       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
@@ -493,6 +493,13 @@ export default function Home() {
                     }}
                   >
                     Slovak for "hello"
+                    <span 
+                      className="absolute top-full left-1/2 transform -translate-x-1/2"
+                      style={{
+                        border: '4px solid transparent',
+                        borderTopColor: isDark ? '#ffffff' : '#000000'
+                      }}
+                    ></span>
                   </span>
                 </>
               )}
