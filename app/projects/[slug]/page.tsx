@@ -21,6 +21,7 @@ export default function ProjectPage() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [showProgressBar, setShowProgressBar] = useState(false)
   const authorSectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const aboutRef = useRef<HTMLDivElement>(null)
@@ -44,9 +45,12 @@ export default function ProjectPage() {
       // Calculate scroll progress for mobile reading progress bar (optimized)
       if (rafId === null) {
         rafId = requestAnimationFrame(() => {
+          const scrollTop = window.scrollY
+          // Show progress bar only after scrolling 20px
+          setShowProgressBar(scrollTop > 20)
+          
           const windowHeight = window.innerHeight
           const documentHeight = document.documentElement.scrollHeight
-          const scrollTop = window.scrollY
           const scrollableHeight = documentHeight - windowHeight
           const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0
           setScrollProgress(Math.min(100, Math.max(0, progress)))
@@ -526,9 +530,10 @@ export default function ProjectPage() {
       <header className="fixed md:sticky top-0 z-[120] flex items-center justify-between py-4 transition-colors w-full overflow-x-hidden" style={{ backgroundColor: 'var(--background)' }}>
         {/* Mobile Reading Progress Bar - Bottom border of header */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-[2px] z-[121] md:hidden"
+          className="absolute bottom-0 left-0 right-0 h-[2px] z-[121] md:hidden transition-opacity duration-300 ease-in-out"
           style={{ 
-            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)'
+            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
+            opacity: showProgressBar ? 1 : 0
           }}
         >
           <div 
