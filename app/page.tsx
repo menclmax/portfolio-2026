@@ -12,6 +12,9 @@ export default function Home() {
   const [mousePositions, setMousePositions] = useState<{ [key: number]: { x: number; y: number } }>({})
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,6 +55,14 @@ export default function Home() {
     if (savedTheme) {
       setIsDark(savedTheme === 'dark')
     }
+    
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
 
     // Handle smooth scroll to hash on page load
     if (window.location.hash) {
@@ -103,6 +114,21 @@ export default function Home() {
     { name: 'YouTube', url: 'https://www.youtube.com/maxmencl' }
   ]
 
+
+  // Close tooltips when clicking outside on mobile
+  useEffect(() => {
+    if (!isMobile) return
+    
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (!target.closest('.relative.group')) {
+        setActiveTooltip(null)
+      }
+    }
+    
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [isMobile])
 
   return (
     <main className="min-h-screen transition-colors overflow-x-hidden w-full" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
@@ -179,6 +205,59 @@ export default function Home() {
 
           {/* Mobile Menu Button & Theme Toggle Container */}
           <div className="flex items-center gap-2">
+            {/* Theme Toggle - Always visible */}
+            <button
+              onClick={() => {
+                setIsAnimating(true)
+                setIsDark(!isDark)
+                setTimeout(() => setIsAnimating(false), 500)
+              }}
+              className="p-2 hover:opacity-70 transition-opacity relative"
+              aria-label="Toggle theme"
+            >
+              <div className="relative w-5 h-5 flex items-center justify-center">
+                {isDark ? (
+                  // Sun icon for dark mode (clicking switches to light)
+                  <svg 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    className={`transition-all duration-300 ${isAnimating ? 'theme-toggle-animate' : ''}`}
+                  >
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                  </svg>
+                ) : (
+                  // Moon icon for light mode (clicking switches to dark)
+                  <svg 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    className={`transition-all duration-300 ${isAnimating ? 'theme-toggle-animate' : ''}`}
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                  </svg>
+                )}
+              </div>
+            </button>
+            
             {/* Mobile Menu Button - Visible only on mobile */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -216,26 +295,6 @@ export default function Home() {
                   <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
               )}
-            </button>
-            
-            {/* Theme Toggle - Always visible */}
-            <button
-              onClick={() => setIsDark(!isDark)}
-              className="p-2 hover:opacity-70 transition-opacity"
-              aria-label="Toggle theme"
-            >
-              <svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-              </svg>
             </button>
           </div>
         </div>
@@ -362,20 +421,66 @@ export default function Home() {
         {/* Hero Section */}
         <section className="mb-16 w-full overflow-x-hidden">
           <h1 className={`text-4xl md:text-4xl font-bold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
-            <span className="relative group inline-block" style={{ fontSize: '1.2em', marginRight: '0.5em' }}>
-              <span style={{ fontFamily: 'Metal, cursive' }}>Ahoj!</span>
+            <span 
+              className="relative group inline-block cursor-pointer touch-manipulation" 
+              style={{ fontSize: '1.2em', marginRight: '0.5em' }}
+              onClick={() => isMobile && setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')}
+              onTouchStart={() => isMobile && setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')}
+            >
+              <span 
+                style={{ fontFamily: 'Metal, cursive' }}
+                className={`transition-all relative ${
+                  isMobile 
+                    ? activeTooltip === 'ahoj' 
+                      ? 'opacity-80' 
+                      : 'opacity-100'
+                    : ''
+                }`}
+              >
+                Ahoj!
+                {isMobile && (
+                  <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-current opacity-20"></span>
+                )}
+              </span>
               <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
-              <span className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[60] shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent ${isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'}`} style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', maxWidth: 'calc(100vw - 2rem)' }}>
+              <span 
+                className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap transition-all pointer-events-none z-[60] shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent ${
+                  isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
+                } ${
+                  isMobile 
+                    ? activeTooltip === 'ahoj' 
+                      ? 'opacity-100 scale-100 translate-y-0' 
+                      : 'opacity-0 scale-95 translate-y-2'
+                    : 'opacity-0 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 scale-95 translate-y-2'
+                }`} 
+                style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', maxWidth: 'calc(100vw - 2rem)' }}
+              >
                 Slovak for "hello"
               </span>
             </span> Max Mencl here!
           </h1>
           <p className={`text-base md:text-lg mb-8 max-w-1xl leading-relaxed break-words w-full ${isDark ? 'text-gray-300' : 'text-gray-600'}`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', maxWidth: '100%', boxSizing: 'border-box' }}>
             User Experience (UX) Designer based in The Hague, The Netherlands{' '}
-            <span className="relative group inline-block" style={{ maxWidth: '100%' }}>
-              (<span className="underline">GMT+1</span>).
+            <span 
+              className="relative group inline-block cursor-pointer touch-manipulation" 
+              style={{ maxWidth: '100%' }}
+              onClick={() => isMobile && setActiveTooltip(activeTooltip === 'time' ? null : 'time')}
+              onTouchStart={() => isMobile && setActiveTooltip(activeTooltip === 'time' ? null : 'time')}
+            >
+              (<span className={`underline transition-opacity ${isMobile && activeTooltip === 'time' ? 'opacity-80' : ''}`}>GMT+1</span>).
               {amsterdamTime && (
-                <span className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent ${isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'}`} style={{ maxWidth: 'calc(100vw - 2rem)' }}>
+                <span 
+                  className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs rounded-lg whitespace-nowrap transition-all pointer-events-none z-10 shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent ${
+                    isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
+                  } ${
+                    isMobile 
+                      ? activeTooltip === 'time' 
+                        ? 'opacity-100 scale-100 translate-y-0' 
+                        : 'opacity-0 scale-95 translate-y-2'
+                      : 'opacity-0 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 scale-95 translate-y-2'
+                  }`} 
+                  style={{ maxWidth: 'calc(100vw - 2rem)' }}
+                >
                   Time: {amsterdamTime}
                 </span>
               )}

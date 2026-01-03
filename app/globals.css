@@ -42,6 +42,12 @@ p, span, div {
   max-width: 100%;
 }
 
+/* Touch manipulation for better mobile interactions */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 0.6;
@@ -179,6 +185,26 @@ html[data-theme="light"] .design-process-image-tooltip::after {
 .flip-card-back {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+/* Theme toggle animation */
+.theme-toggle-animate {
+  animation: rotateAndScale 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes rotateAndScale {
+  0% {
+    transform: rotate(0deg) scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.15);
+    opacity: 0.9;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
 }
 
 
