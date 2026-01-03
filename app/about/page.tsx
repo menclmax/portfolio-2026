@@ -332,18 +332,18 @@ export default function AboutPage() {
                 style={{
                   width: '160px',
                   height: '200px',
-                  transform: 'translate(8px, 8px) rotate(-3deg)',
+                  transform: 'translate(8px, 15px) rotate(-6deg)',
                   zIndex: 2,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, 8px) rotate(-3deg) scale(1.05)'
+                  e.currentTarget.style.transform = 'translate(8px, 15px) rotate(-6deg) scale(1.05)'
                   e.currentTarget.style.zIndex = '10'
                   e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, 8px) rotate(-3deg)'
+                  e.currentTarget.style.transform = 'translate(8px, 15px) rotate(-6deg)'
                   e.currentTarget.style.zIndex = '2'
                   e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
                 }}
@@ -363,18 +363,18 @@ export default function AboutPage() {
                 style={{
                   width: '160px',
                   height: '200px',
-                  transform: 'translate(-8px, 8px) rotate(2deg)',
+                  transform: 'translate(-8px, 15px) rotate(5deg)',
                   zIndex: 1,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, 8px) rotate(2deg) scale(1.05)'
+                  e.currentTarget.style.transform = 'translate(-8px, 15px) rotate(5deg) scale(1.05)'
                   e.currentTarget.style.zIndex = '10'
                   e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, 8px) rotate(2deg)'
+                  e.currentTarget.style.transform = 'translate(-8px, 15px) rotate(5deg)'
                   e.currentTarget.style.zIndex = '1'
                   e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
                 }}
@@ -394,18 +394,18 @@ export default function AboutPage() {
                 style={{
                   width: '160px',
                   height: '200px',
-                  transform: 'translate(8px, -8px) rotate(-1deg)',
+                  transform: 'translate(8px, -15px) rotate(5deg)',
                   zIndex: 3,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, -8px) rotate(-1deg) scale(1.05)'
+                  e.currentTarget.style.transform = 'translate(8px, -15px) rotate(5deg) scale(1.05)'
                   e.currentTarget.style.zIndex = '10'
                   e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, -8px) rotate(-1deg)'
+                  e.currentTarget.style.transform = 'translate(8px, -15px) rotate(5deg)'
                   e.currentTarget.style.zIndex = '3'
                   e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
                 }}
@@ -428,18 +428,18 @@ export default function AboutPage() {
                 style={{
                   width: '160px',
                   height: '200px',
-                  transform: 'translate(-8px, -8px) rotate(1deg)',
+                  transform: 'translate(-8px, -15px) rotate(-5deg)',
                   zIndex: 4,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, -8px) rotate(1deg) scale(1.05)'
+                  e.currentTarget.style.transform = 'translate(-8px, -15px) rotate(-5deg) scale(1.05)'
                   e.currentTarget.style.zIndex = '10'
                   e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, -8px) rotate(1deg)'
+                  e.currentTarget.style.transform = 'translate(-8px, -15px) rotate(-5deg)'
                   e.currentTarget.style.zIndex = '4'
                   e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
                 }}
