@@ -157,7 +157,7 @@ export default function Home() {
   return (
     <main className="min-h-screen transition-colors overflow-x-hidden w-full" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between py-4 transition-colors w-full overflow-x-hidden" style={{ backgroundColor: 'var(--background)' }}>
+      <header className="fixed md:sticky top-0 z-[120] flex items-center justify-between py-4 transition-colors w-full overflow-x-hidden" style={{ backgroundColor: 'var(--background)' }}>
         <div className="max-w-3xl mx-auto w-full flex items-center justify-between relative px-4 md:px-6">
           {/* Logo */}
           <Link href="/" className="block" onClick={handleNavClick}>
@@ -447,7 +447,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 w-full overflow-x-hidden" style={{ overflowY: 'visible' }}>
+      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 pt-20 md:pt-8 w-full overflow-x-hidden" style={{ overflowY: 'visible' }}>
         {/* Hero Section */}
           <section className="mb-16 w-full" style={{ overflow: 'visible', position: 'relative' }}>
             <h1 className={`text-4xl md:text-4xl font-bold mb-6 leading-tight ${isDark ? 'text-white' : 'text-black'}`} style={{ lineHeight: '1.2', overflow: 'visible', position: 'relative', zIndex: 100 }}>

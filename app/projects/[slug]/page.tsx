@@ -502,7 +502,7 @@ export default function ProjectPage() {
   return (
     <main className="min-h-screen transition-colors overflow-x-hidden w-full" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between py-4 transition-colors w-full overflow-x-hidden" style={{ backgroundColor: 'var(--background)' }}>
+      <header className="fixed md:sticky top-0 z-[120] flex items-center justify-between py-4 transition-colors w-full overflow-x-hidden" style={{ backgroundColor: 'var(--background)' }}>
         <div className="max-w-3xl mx-auto w-full flex items-center justify-between relative px-4 md:px-6">
           {/* Logo */}
           <Link href="/" className="block" onClick={handleNavClick}>
@@ -749,7 +749,7 @@ export default function ProjectPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 pt-6 md:pt-24 relative w-full overflow-x-hidden">
+      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 pt-20 md:pt-24 relative w-full overflow-x-hidden">
         {/* Fixed Sidebar Menu */}
         <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
           <nav className="space-y-4">
