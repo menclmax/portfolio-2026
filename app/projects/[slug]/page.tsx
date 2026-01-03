@@ -15,6 +15,10 @@ export default function ProjectPage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const [activeSubSection, setActiveSubSection] = useState<string | null>(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const authorSectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const aboutRef = useRef<HTMLDivElement>(null)
@@ -115,6 +119,40 @@ export default function ProjectPage() {
     handleScroll() // Check initial position
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  useEffect(() => {
+    // Close mobile menu on escape key
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+    // Prevent body scroll when menu is open
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+      window.addEventListener('keydown', handleEscape)
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      window.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [isMobileMenuOpen])
+
+  const handleNavClick = () => {
+    setIsMobileMenuOpen(false)
+  }
   
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -141,6 +179,31 @@ export default function ProjectPage() {
       setIsDark(savedTheme === 'dark')
     }
   }, [])
+
+  // Reset carousel when project changes
+  useEffect(() => {
+    setCurrentImageIndex(0)
+  }, [slug])
+
+  // Keyboard navigation for carousel
+  useEffect(() => {
+    if (!project?.aboutImages || project.aboutImages.length <= 1) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setCurrentImageIndex((prev) => 
+          prev === 0 ? project.aboutImages!.length - 1 : prev - 1
+        )
+      } else if (e.key === 'ArrowRight') {
+        setCurrentImageIndex((prev) => 
+          prev === project.aboutImages!.length - 1 ? 0 : prev + 1
+        )
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [project?.aboutImages])
 
   useEffect(() => {
     if (mounted) {
@@ -212,12 +275,12 @@ export default function ProjectPage() {
   }
 
   return (
-    <main className="min-h-screen transition-colors" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+    <main className="min-h-screen transition-colors overflow-x-hidden w-full" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between py-4 transition-colors w-full" style={{ backgroundColor: 'var(--background)' }}>
-        <div className="max-w-3xl mx-auto w-full flex items-center justify-between relative px-6">
+      <header className="sticky top-0 z-50 flex items-center justify-between py-4 transition-colors w-full overflow-x-hidden" style={{ backgroundColor: 'var(--background)' }}>
+        <div className="max-w-3xl mx-auto w-full flex items-center justify-between relative px-4 md:px-6">
           {/* Logo */}
-          <Link href="/" className="block">
+          <Link href="/" className="block" onClick={handleNavClick}>
             <img 
               src="/assets/Signeture.svg" 
               alt="Logo" 
@@ -228,8 +291,8 @@ export default function ProjectPage() {
             />
           </Link>
 
-          {/* Navigation - Centered */}
-          <nav className="flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
+          {/* Desktop Navigation - Hidden on mobile */}
+          <nav className="hidden md:flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
             <Link 
               href="/" 
               className={`px-3 py-1.5 rounded text-xs font-medium hover:opacity-80 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
@@ -261,30 +324,207 @@ export default function ProjectPage() {
               Contact
             </Link>
           </nav>
-          
-          {/* Theme Toggle - Right */}
-          <button
-            onClick={() => setIsDark(!isDark)}
-            className="p-2 hover:opacity-70 transition-opacity"
-            aria-label="Toggle theme"
-          >
-            <svg 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
+
+          {/* Mobile Menu Button & Theme Toggle Container */}
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle - Always visible */}
+            <button
+              onClick={() => {
+                setIsAnimating(true)
+                setIsDark(!isDark)
+                setTimeout(() => setIsAnimating(false), 500)
+              }}
+              className="p-2 hover:opacity-70 transition-opacity relative"
+              aria-label="Toggle theme"
+              style={{ color: isDark ? '#ffffff' : '#000000' }}
             >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </button>
+              <div className="relative w-5 h-5 flex items-center justify-center">
+                {isDark ? (
+                  // Sun icon for dark mode (clicking switches to light)
+                  <svg 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    className={isAnimating ? 'theme-toggle-animate' : ''}
+                    style={{ color: isDark ? '#ffffff' : '#000000' }}
+                  >
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                  </svg>
+                ) : (
+                  // Moon icon for light mode (clicking switches to dark)
+                  <svg 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    className={isAnimating ? 'theme-toggle-animate' : ''}
+                    style={{ color: isDark ? '#ffffff' : '#000000' }}
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                  </svg>
+                )}
+              </div>
+            </button>
+            
+            {/* Mobile Menu Button - Visible only on mobile */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 hover:opacity-70 transition-opacity"
+              aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
+              style={{ color: isDark ? '#ffffff' : '#000000' }}
+            >
+              {isMobileMenuOpen ? (
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                  style={{ color: isDark ? '#ffffff' : '#000000' }}
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              ) : (
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                  style={{ color: isDark ? '#ffffff' : '#000000' }}
+                >
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6 py-8 pt-24 relative">
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Menu Panel */}
+      <div 
+        className={`fixed top-0 right-0 h-full w-80 max-w-[80vw] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        style={{ backgroundColor: 'var(--background)', maxWidth: 'min(320px, 80vw)' }}
+      >
+        <div className="flex flex-col h-full">
+          {/* Mobile Menu Header */}
+          <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: isDark ? '#333' : '#e5e5e5' }}>
+            <span className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-black'}`}>Menu</span>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 hover:opacity-70 transition-opacity"
+              aria-label="Close menu"
+            >
+              <svg 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile Menu Items */}
+          <nav className="flex-1 p-6">
+            <div className="flex flex-col gap-2">
+              <Link 
+                href="/"
+                onClick={handleNavClick}
+                className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
+                  isDark ? 'text-white' : 'text-black'
+                }`}
+              >
+                Home
+              </Link>
+              <Link 
+                href="/about"
+                onClick={handleNavClick}
+                className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
+                  isDark ? 'text-white' : 'text-black'
+                }`}
+              >
+                About
+              </Link>
+              <Link 
+                href="/projects"
+                onClick={handleNavClick}
+                className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors ${
+                  isDark 
+                    ? 'bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white' 
+                    : 'bg-gray-200 hover:bg-gray-300 text-black'
+                }`}
+              >
+                Projects
+              </Link>
+              <Link 
+                href="/ventures"
+                onClick={handleNavClick}
+                className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
+                  isDark ? 'text-white' : 'text-black'
+                }`}
+              >
+                Ventures
+              </Link>
+              <Link 
+                href="/#contact"
+                onClick={handleNavClick}
+                className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
+                  isDark ? 'text-white' : 'text-black'
+                }`}
+              >
+                Contact
+              </Link>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 pt-24 relative w-full overflow-x-hidden">
         {/* Fixed Sidebar Menu */}
         <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-40 hidden lg:block">
           <nav className="space-y-4">
@@ -516,7 +756,110 @@ export default function ProjectPage() {
                 className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
                 dangerouslySetInnerHTML={{ __html: renderAboutWithFlags(project.about) }}
               />
-              {project.aboutImage && (
+              {/* Image Carousel or Single Image */}
+              {project.aboutImages && project.aboutImages.length > 0 ? (
+                <div style={{ marginTop: '48px' }}>
+                  <div className="relative">
+                    <div 
+                      className="p-4 rounded-lg relative overflow-hidden"
+                      style={{
+                        border: isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)',
+                        backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9'
+                      }}
+                    >
+                      {/* Carousel Images */}
+                      <div className="relative">
+                        {project.aboutImages.map((image, index) => (
+                          <div
+                            key={index}
+                            className={`transition-opacity duration-500 ${
+                              index === currentImageIndex ? 'opacity-100 relative' : 'opacity-0 absolute inset-0'
+                            }`}
+                          >
+                            <img 
+                              src={image.src} 
+                              alt={`${project.title} - Image ${index + 1}`}
+                              className="w-full h-auto rounded-lg"
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Navigation Arrows */}
+                      {project.aboutImages.length > 1 && (
+                        <>
+                          <button
+                            onClick={() => setCurrentImageIndex((prev) => 
+                              prev === 0 ? project.aboutImages!.length - 1 : prev - 1
+                            )}
+                            className={`absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-opacity hover:opacity-80 ${
+                              isDark ? 'bg-[#1a1a1a] border border-[#232323] text-white' : 'bg-white border border-gray-300 text-black'
+                            }`}
+                            aria-label="Previous image"
+                          >
+                            <svg 
+                              width="20" 
+                              height="20" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round"
+                            >
+                              <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => setCurrentImageIndex((prev) => 
+                              prev === project.aboutImages!.length - 1 ? 0 : prev + 1
+                            )}
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-opacity hover:opacity-80 ${
+                              isDark ? 'bg-[#1a1a1a] border border-[#232323] text-white' : 'bg-white border border-gray-300 text-black'
+                            }`}
+                            aria-label="Next image"
+                          >
+                            <svg 
+                              width="20" 
+                              height="20" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round"
+                            >
+                              <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                          </button>
+                        </>
+                      )}
+                    </div>
+                    
+                    {/* Dot Indicators */}
+                    {project.aboutImages.length > 1 && (
+                      <div className="flex justify-center gap-2 mt-4">
+                        {project.aboutImages.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentImageIndex(index)}
+                            className={`transition-all rounded-full ${
+                              index === currentImageIndex
+                                ? (isDark ? 'bg-white' : 'bg-black')
+                                : (isDark ? 'bg-gray-600' : 'bg-gray-300')
+                            }`}
+                            style={{
+                              width: index === currentImageIndex ? '8px' : '6px',
+                              height: index === currentImageIndex ? '8px' : '6px',
+                            }}
+                            aria-label={`Go to image ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : project.aboutImage ? (
                 <div style={{ marginTop: '48px' }}>
                   <div 
                     className="p-4 rounded-lg"
@@ -537,7 +880,7 @@ export default function ProjectPage() {
                     </p>
                   )}
                 </div>
-              )}
+              ) : null}
             </div>
           )}
 
