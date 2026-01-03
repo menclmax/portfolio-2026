@@ -471,9 +471,9 @@ export default function Home() {
               >
                 {isMobile && ahojToggled ? 'Hello!' : 'Ahoj!'}
               </span>
+              <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
               {!isMobile && (
                 <>
-                  <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
                   {/* Desktop tooltip */}
                   <span 
                     data-tooltip
