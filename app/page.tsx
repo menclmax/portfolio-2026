@@ -121,14 +121,16 @@ export default function Home() {
     
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      if (!target.closest('.relative.group')) {
+      // Check if click is outside tooltip elements
+      if (!target.closest('.relative.group') && !target.closest('[data-tooltip-trigger]')) {
         setActiveTooltip(null)
       }
     }
     
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [isMobile])
+    // Use a slight delay to allow click events to process first
+    document.addEventListener('click', handleClickOutside, true)
+    return () => document.removeEventListener('click', handleClickOutside, true)
+  }, [isMobile, activeTooltip])
 
   return (
     <main className="min-h-screen transition-colors overflow-x-hidden w-full" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
@@ -430,12 +432,26 @@ export default function Home() {
             <span 
               className="relative group inline-block cursor-pointer touch-manipulation" 
               style={{ fontSize: '1.2em', marginRight: '0.5em' }}
-              onClick={() => isMobile && setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')}
-              onTouchStart={() => isMobile && setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')}
+              data-tooltip-trigger="ahoj"
+              onClick={(e) => {
+                if (isMobile) {
+                  e.stopPropagation()
+                  setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')
+                }
+              }}
+              onTouchStart={(e) => {
+                if (isMobile) {
+                  e.stopPropagation()
+                  setActiveTooltip(activeTooltip === 'ahoj' ? null : 'ahoj')
+                }
+              }}
             >
               <span 
-                style={{ fontFamily: 'Metal, cursive' }}
-                className={`transition-all relative ${
+                style={{ 
+                  fontFamily: 'Metal, cursive',
+                  ...(isMobile ? { borderBottom: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}` } : {})
+                }}
+                className={`transition-all relative inline-block ${
                   isMobile 
                     ? activeTooltip === 'ahoj' 
                       ? 'opacity-80' 
@@ -444,9 +460,6 @@ export default function Home() {
                 }`}
               >
                 Ahoj!
-                {isMobile && (
-                  <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-current opacity-20"></span>
-                )}
               </span>
               <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
               <span 
