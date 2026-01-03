@@ -448,6 +448,7 @@ export default function Home() {
                   overflow: 'visible',
                   maxWidth: 'none',
                   display: 'inline-block',
+                  pointerEvents: 'auto',
                   ...(isMobile ? { 
                     cursor: 'pointer',
                     paddingRight: '8px'
@@ -460,18 +461,18 @@ export default function Home() {
                 {isMobile && ahojToggled ? 'Hello!' : 'Ahoj!'}
               </span>
               {!isMobile && (
-                <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
-              )}
-              {/* Desktop tooltip - only show on desktop */}
-              {!isMobile && (
-                <span 
-                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-[60] shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
-                    isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
-                  }" 
-                  style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', maxWidth: 'calc(100vw - 2rem)' }}
-                >
-                  Slovak for "hello"
-                </span>
+                <>
+                  <span className="absolute -bottom-1 left-1/2 w-1 h-1 rounded-full pulse-dot" style={{ backgroundColor: isDark ? '#ffffff' : '#000000' }}></span>
+                  {/* Desktop tooltip */}
+                  <span 
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-[60] shadow-lg after:content-[''] after:absolute after:top-full after:left-1/2 after:transform after:-translate-x-1/2 after:border-4 after:border-transparent scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
+                      isDark ? 'bg-white text-black after:border-t-white' : 'bg-black text-white after:border-t-black'
+                    }" 
+                    style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', maxWidth: 'calc(100vw - 2rem)' }}
+                  >
+                    Slovak for "hello"
+                  </span>
+                </>
               )}
             </span>
             <span className="md:inline block mt-2 md:mt-0">Max Mencl here!</span>
