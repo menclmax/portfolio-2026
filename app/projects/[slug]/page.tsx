@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { getProjectBySlug } from '@/data/projects'
 
 export default function ProjectPage() {
   const params = useParams()
+  const router = useRouter()
   const slug = params?.slug as string
   const project = getProjectBySlug(slug)
   const [isDark, setIsDark] = useState(false)
@@ -901,9 +902,9 @@ export default function ProjectPage() {
         <article>
           {/* Back Arrow and Visit Project */}
           <div className="flex items-center justify-between mb-6">
-            <Link 
-              href="/"
-              className={`inline-flex items-center gap-2 text-sm hover:opacity-70 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
+            <button 
+              onClick={() => router.push('/')}
+              className={`inline-flex items-center gap-2 text-sm hover:opacity-70 transition-opacity cursor-pointer ${isDark ? 'text-white' : 'text-black'}`}
             >
               <svg 
                 width="16" 
@@ -918,7 +919,7 @@ export default function ProjectPage() {
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
               Back
-            </Link>
+            </button>
             {project.projectUrl && (
               <Link 
                 href={project.projectUrl}
