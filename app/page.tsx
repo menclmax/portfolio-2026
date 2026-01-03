@@ -448,7 +448,7 @@ export default function Home() {
             >
               <span 
                 style={{ 
-                  fontFamily: ahojToggled ? '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif' : 'Metal, cursive',
+                  fontFamily: 'Metal, cursive',
                   ...(isMobile ? { 
                     borderBottom: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}`,
                     cursor: 'pointer'
