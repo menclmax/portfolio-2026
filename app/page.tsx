@@ -739,7 +739,9 @@ export default function Home() {
             >
               mencl.max1@gmail.com
             </a>
-            {' '}for business. Connect with me on the platforms below.
+            {' '}for business.
+            <br />
+            Connect with me on the platforms below.
           </p>
           <div className="flex flex-col items-start gap-3">
             <a 

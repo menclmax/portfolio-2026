@@ -360,13 +360,10 @@ export default function AboutPage() {
                   }}
                 >
                   <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                    <Image 
+                    <img 
                       src="/assets/IMG_1452.JPG" 
                       alt="About me" 
-                      fill
-                      priority
-                      sizes="220px"
-                      className="object-cover rounded-lg"
+                      className="object-cover rounded-lg w-full h-full"
                     />
                   </div>
                 </div>
@@ -434,13 +431,10 @@ export default function AboutPage() {
                   }}
                 >
                   <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                    <Image 
+                    <img 
                       src="/assets/IMG_2680.JPG" 
                       alt="About me" 
-                      fill
-                      priority
-                      sizes="220px"
-                      className="object-cover rounded-lg"
+                      className="object-cover rounded-lg w-full h-full"
                     />
                   </div>
                 </div>
