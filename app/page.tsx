@@ -432,7 +432,7 @@ export default function Home() {
             <h1 className={`text-4xl md:text-4xl font-bold mb-6 leading-tight ${isDark ? 'text-white' : 'text-black'}`} style={{ lineHeight: '1.2', overflow: 'visible', position: 'relative', zIndex: 100 }}>
             <span 
               className="relative group inline-block touch-manipulation" 
-              style={{ fontSize: '1.2em', marginRight: '0.5em', paddingBottom: isMobile ? '0.5rem' : '0' }}
+              style={{ fontSize: '1.2em', marginRight: '0.5em', paddingBottom: isMobile ? '0.5rem' : '0', marginTop: isMobile ? '0.5rem' : '0' }}
               onClick={(e) => {
                 if (isMobile) {
                   e.preventDefault()
@@ -475,7 +475,7 @@ export default function Home() {
                 className="absolute left-1/2 w-1 h-1 rounded-full pulse-dot" 
                 style={{ 
                   backgroundColor: isDark ? '#ffffff' : '#000000',
-                  bottom: isMobile ? '-2px' : '-4px',
+                  bottom: isMobile ? '10px' : '-4px',
                   transform: 'translateX(-50%)'
                 }}
               ></span>
