@@ -10,6 +10,18 @@ export default function AboutPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [flippedCards, setFlippedCards] = useState<{[key: number]: boolean}>({})
+
+  const toggleCardFlip = (cardIndex: number) => {
+    setFlippedCards(prev => {
+      // If this card is already flipped, just flip it back
+      if (prev[cardIndex]) {
+        return { [cardIndex]: false }
+      }
+      // Otherwise, flip this card and reset all others
+      return { [cardIndex]: true }
+    })
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -324,134 +336,294 @@ export default function AboutPage() {
       <div className="w-full overflow-visible mb-16">
         <div className="max-w-5xl mx-auto px-2 md:px-6 overflow-visible">
           {/* Mobile Grid 2x2 with overlap */}
-          <div className="grid grid-cols-2 gap-0 md:hidden mx-4 py-4 overflow-visible">
+          <div className="grid grid-cols-2 gap-0 md:hidden mx-4 py-4 overflow-visible" style={{ perspective: '1000px' }}>
             {/* Card 1 - Top Left */}
             <div className="relative flex justify-center items-center py-2">
               <div 
-                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                className="rounded-xl shadow-xl cursor-pointer"
                 style={{
                   width: '160px',
                   height: '200px',
                   transform: 'translate(8px, 15px) rotate(-6deg)',
-                  zIndex: 2,
+                  zIndex: flippedCards[1] ? 10 : 2,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                  transformStyle: 'preserve-3d'
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, 15px) rotate(-6deg) scale(1.05)'
-                  e.currentTarget.style.zIndex = '10'
-                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, 15px) rotate(-6deg)'
-                  e.currentTarget.style.zIndex = '2'
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
-                }}
+                onClick={() => toggleCardFlip(1)}
               >
-                <img 
-                  src="/assets/IMG_1452.JPG" 
-                  alt="Interviewing worldwide pianist Costantino Carrara" 
-                  className="object-cover w-full h-full"
-                />
+                <div 
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s',
+                    transform: flippedCards[1] ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                  }}
+                >
+                  <div 
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden'
+                    }}
+                  >
+                    <img 
+                      src="/assets/IMG_1452.JPG" 
+                      alt="Interviewing worldwide pianist Costantino Carrara" 
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <div 
+                    className="rounded-xl"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      backgroundColor: isDark ? '#1a1a1a' : '#f5f5f0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `2px solid ${isDark ? '#333' : '#ddd'}`,
+                      boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+                    }}
+                  >
+                    <div className="text-center p-4">
+                      <div 
+                        className="text-xs leading-relaxed"
+                        style={{ color: isDark ? '#999' : '#666' }}
+                      >
+                        Interviewing worldwide pianist Costantino Carrara
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Card 2 - Top Right */}
             <div className="relative flex justify-center items-center py-2">
               <div 
-                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                className="rounded-xl shadow-xl cursor-pointer"
                 style={{
                   width: '160px',
                   height: '200px',
                   transform: 'translate(-8px, 15px) rotate(5deg)',
-                  zIndex: 1,
+                  zIndex: flippedCards[2] ? 10 : 1,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                  transformStyle: 'preserve-3d'
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, 15px) rotate(5deg) scale(1.05)'
-                  e.currentTarget.style.zIndex = '10'
-                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, 15px) rotate(5deg)'
-                  e.currentTarget.style.zIndex = '1'
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
-                }}
+                onClick={() => toggleCardFlip(2)}
               >
-                <img 
-                  src="/assets/IMG_2680.JPG" 
-                  alt="Interviewing Ivana Tattoo Art" 
-                  className="object-cover w-full h-full"
-                />
+                <div 
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s',
+                    transform: flippedCards[2] ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                  }}
+                >
+                  <div 
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden'
+                    }}
+                  >
+                    <img 
+                      src="/assets/IMG_2680.JPG" 
+                      alt="Interviewing Ivana Tattoo Art" 
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <div 
+                    className="rounded-xl"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      backgroundColor: isDark ? '#1a1a1a' : '#f5f5f0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `2px solid ${isDark ? '#333' : '#ddd'}`,
+                      boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+                    }}
+                  >
+                    <div className="text-center p-4">
+                      <div 
+                        className="text-xs leading-relaxed"
+                        style={{ color: isDark ? '#999' : '#666' }}
+                      >
+                        Interviewing the world's best female Tattoo Artist - Ivana Tattoo Art
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Card 3 - Bottom Left */}
             <div className="relative flex justify-center items-center py-2">
               <div 
-                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                className="rounded-xl shadow-xl cursor-pointer"
                 style={{
                   width: '160px',
                   height: '200px',
                   transform: 'translate(8px, -15px) rotate(5deg)',
-                  zIndex: 3,
+                  zIndex: flippedCards[3] ? 10 : 3,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                  transformStyle: 'preserve-3d'
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, -15px) rotate(5deg) scale(1.05)'
-                  e.currentTarget.style.zIndex = '10'
-                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(8px, -15px) rotate(5deg)'
-                  e.currentTarget.style.zIndex = '3'
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
-                }}
+                onClick={() => toggleCardFlip(3)}
               >
-                <Image 
-                  src="/assets/IMG_6704.JPG" 
-                  alt="Bratislava, Slovakia" 
-                  fill
-                  loading="eager"
-                  sizes="160px"
-                  className="object-cover"
-                />
+                <div 
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s',
+                    transform: flippedCards[3] ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                  }}
+                >
+                  <div 
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden'
+                    }}
+                  >
+                    <Image 
+                      src="/assets/IMG_6704.JPG" 
+                      alt="Bratislava, Slovakia" 
+                      fill
+                      loading="eager"
+                      sizes="160px"
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
+                  <div 
+                    className="rounded-xl"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      backgroundColor: isDark ? '#1a1a1a' : '#f5f5f0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `2px solid ${isDark ? '#333' : '#ddd'}`,
+                      boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+                    }}
+                  >
+                    <div className="text-center p-4">
+                      <div 
+                        className="text-xs leading-relaxed"
+                        style={{ color: isDark ? '#999' : '#666' }}
+                      >
+                        Bratislava, Slovakia - my hometown
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Card 4 - Bottom Right */}
             <div className="relative flex justify-center items-center py-2">
               <div 
-                className="rounded-xl overflow-hidden shadow-xl cursor-pointer relative"
+                className="rounded-xl shadow-xl cursor-pointer"
                 style={{
                   width: '160px',
                   height: '200px',
                   transform: 'translate(-8px, -15px) rotate(-5deg)',
-                  zIndex: 4,
+                  zIndex: flippedCards[4] ? 10 : 4,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                  transformStyle: 'preserve-3d'
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, -15px) rotate(-5deg) scale(1.05)'
-                  e.currentTarget.style.zIndex = '10'
-                  e.currentTarget.style.boxShadow = '0 15px 35px rgba(0,0,0,0.25)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translate(-8px, -15px) rotate(-5deg)'
-                  e.currentTarget.style.zIndex = '4'
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)'
-                }}
+                onClick={() => toggleCardFlip(4)}
               >
-                <Image 
-                  src="/assets/IMG_8467.JPG" 
-                  alt="TV Markiza" 
-                  fill
-                  loading="eager"
-                  sizes="160px"
-                  className="object-cover"
-                />
+                <div 
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s',
+                    transform: flippedCards[4] ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                  }}
+                >
+                  <div 
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden'
+                    }}
+                  >
+                    <Image 
+                      src="/assets/IMG_8467.JPG" 
+                      alt="TV Markiza" 
+                      fill
+                      loading="eager"
+                      sizes="160px"
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
+                  <div 
+                    className="rounded-xl"
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      backgroundColor: isDark ? '#1a1a1a' : '#f5f5f0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `2px solid ${isDark ? '#333' : '#ddd'}`,
+                      boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+                    }}
+                  >
+                    <div className="text-center p-4">
+                      <div 
+                        className="text-xs leading-relaxed"
+                        style={{ color: isDark ? '#999' : '#666' }}
+                      >
+                        Picture from my time in TV Markiza - Slovakia's leading television
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
