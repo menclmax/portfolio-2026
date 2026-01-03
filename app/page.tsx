@@ -684,9 +684,12 @@ export default function Home() {
                     {/* Project Image */}
                     <div className="aspect-video relative overflow-hidden">
                       <img 
-                        src={project.image} 
+                        src={encodeURI(project.image)} 
                         alt={project.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.error('Image failed to load:', project.image)
+                        }}
                       />
                     </div>
                   </div>

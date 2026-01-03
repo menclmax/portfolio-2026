@@ -107,7 +107,7 @@ export const pinnedProjects: Project[] = [
   {
     title: 'THiNK Fest Website Design & Development',
     description: 'Website design and development for The Hague University\'s annual festival, featuring an integrated event registration system',
-    image: '/assets/large-og (1).jpg',
+    image: '/assets/thinkfest-cover.jpg',
     url: '#',
     slug: 'think-fest-website',
     fullDescription: 'Modern shopping experience with seamless checkout and user-friendly interface.',
