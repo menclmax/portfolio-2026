@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { pinnedProjects } from '@/data/projects'
 
 export default function ProjectsPage() {
@@ -322,38 +323,131 @@ export default function ProjectsPage() {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Your Project CTA - Desktop only */}
+            <motion.div
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.1 }}
+              className="hidden md:block"
+            >
+              <Link
+                href="/contact"
+                className="group block transition-opacity relative"
+                style={{ opacity: hoveredProject !== null && hoveredProject !== -1 ? 0.5 : 1 }}
+                onMouseEnter={() => setHoveredProject(-1)}
+                onMouseLeave={() => {
+                  setHoveredProject(null)
+                  setMousePositions(prev => {
+                    const newPos = { ...prev }
+                    delete newPos[-1]
+                    return newPos
+                  })
+                }}
+              onMouseMove={(e) => {
+                const isHovered = hoveredProject === -1
+                if (isHovered) {
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  setMousePositions(prev => ({
+                    ...prev,
+                    [-1]: {
+                      x: ((e.clientX - rect.left) / rect.width) * 100,
+                      y: ((e.clientY - rect.top) / rect.height) * 100
+                    }
+                  }))
+                }
+              }}
+            >
+              <div className={`rounded-lg overflow-hidden transition-colors relative ${isDark ? 'bg-[#1a1a1a] hover:bg-[#2a2a2a]' : 'bg-gray-200 hover:bg-gray-300'}`}>
+                {hoveredProject === -1 && mousePositions[-1] && (
+                  <div
+                    className="absolute inset-0 pointer-events-none rounded-lg z-10"
+                    style={{
+                      background: `radial-gradient(circle 400px at ${mousePositions[-1].x}% ${mousePositions[-1].y}%, ${isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.15)'} 0%, transparent 70%)`,
+                    }}
+                  />
+                )}
+                <div className="aspect-video relative overflow-hidden flex items-center justify-center">
+                  {/* Repeating watermark pattern */}
+                  <div 
+                    className="absolute -inset-10 opacity-[0.04] grid grid-cols-4 gap-8"
+                    style={{
+                      filter: isDark ? 'brightness(0) invert(1)' : 'brightness(0)',
+                      transform: 'rotate(-15deg)'
+                    }}
+                  >
+                    {[...Array(20)].map((_, i) => (
+                      <img 
+                        key={i} 
+                        src="/assets/Signeture.svg" 
+                        alt="" 
+                        className="w-12 h-auto"
+                      />
+                    ))}
+                  </div>
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${isDark ? 'bg-[#2a2a2a]' : 'bg-white/50'} relative z-10`}>
+                    <svg 
+                      width="32" 
+                      height="32" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                      className={isDark ? 'text-white' : 'text-black'}
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3">
+                <h3 className={`text-base font-semibold mb-1 group-hover:opacity-80 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}>
+                  Your Project?
+                </h3>
+                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  This space is reserved for our collaboration!
+                </p>
+              </div>
+              </Link>
+            </motion.div>
+
             {pinnedProjects.map((project, index) => {
               const mousePos = mousePositions[index]
               const isHovered = hoveredProject === index
               
               return (
-                <Link
+                <motion.div
                   key={index}
-                  href={`/projects/${project.slug}`}
-                  className="group block transition-opacity relative"
-                  style={{ opacity: hoveredProject !== null && hoveredProject !== index ? 0.5 : 1 }}
-                  onMouseEnter={() => setHoveredProject(index)}
-                  onMouseLeave={() => {
-                    setHoveredProject(null)
-                    setMousePositions(prev => {
-                      const newPos = { ...prev }
-                      delete newPos[index]
-                      return newPos
-                    })
-                  }}
-                  onMouseMove={(e) => {
-                    if (isHovered) {
-                      const rect = e.currentTarget.getBoundingClientRect()
-                      setMousePositions(prev => ({
-                        ...prev,
-                        [index]: {
-                          x: ((e.clientX - rect.left) / rect.width) * 100,
-                          y: ((e.clientY - rect.top) / rect.height) * 100
-                        }
-                      }))
-                    }
-                  }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.1 }}
                 >
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="group block transition-opacity relative"
+                    style={{ opacity: hoveredProject !== null && hoveredProject !== index ? 0.5 : 1 }}
+                    onMouseEnter={() => setHoveredProject(index)}
+                    onMouseLeave={() => {
+                      setHoveredProject(null)
+                      setMousePositions(prev => {
+                        const newPos = { ...prev }
+                        delete newPos[index]
+                        return newPos
+                      })
+                    }}
+                    onMouseMove={(e) => {
+                      if (isHovered) {
+                        const rect = e.currentTarget.getBoundingClientRect()
+                        setMousePositions(prev => ({
+                          ...prev,
+                          [index]: {
+                            x: ((e.clientX - rect.left) / rect.width) * 100,
+                            y: ((e.clientY - rect.top) / rect.height) * 100
+                          }
+                        }))
+                      }
+                    }}
+                  >
                   <div className={`rounded-lg overflow-hidden transition-colors relative ${isDark ? 'bg-[#1a1a1a] hover:bg-[#2a2a2a]' : 'bg-gray-200 hover:bg-gray-300'}`}>
                     {isHovered && mousePos && (
                       <div
@@ -383,7 +477,8 @@ export default function ProjectsPage() {
                       {project.description}
                     </p>
                   </div>
-                </Link>
+                  </Link>
+                </motion.div>
               )
             })}
           </div>
