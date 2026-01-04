@@ -18,6 +18,8 @@ export default function Home() {
   const [ahojToggled, setAhojToggled] = useState(false)
   const [ahojTimeout, setAhojTimeout] = useState<NodeJS.Timeout | null>(null)
   const [timeTooltipTimeout, setTimeTooltipTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [isAhojHovered, setIsAhojHovered] = useState(false)
+  const [ahojTooltipPosition, setAhojTooltipPosition] = useState({ left: 0, top: 0 })
 
   useEffect(() => {
     const handleScroll = () => {
@@ -122,8 +124,7 @@ export default function Home() {
   const socialButtons = [
     { name: 'LinkedIn', url: 'https://www.linkedin.com/in/maxmencl/' },
     { name: 'Instagram', url: 'https://instagram.com/maxmencl' },
-    { name: 'YouTube', url: 'https://www.youtube.com/maxmencl' },
-    { name: 'GitHub', url: 'https://github.com/menclmax' }
+    { name: 'YouTube', url: 'https://www.youtube.com/maxmencl' }
   ]
 
 
@@ -203,28 +204,12 @@ export default function Home() {
             >
               Ventures
             </Link>
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                const contactSection = document.getElementById('contact')
-                if (contactSection) {
-                  const header = document.querySelector('header')
-                  const headerHeight = header ? header.offsetHeight : 80
-                  const elementPosition = contactSection.getBoundingClientRect().top + window.scrollY
-                  const offsetPosition = elementPosition - headerHeight - 20
-                  window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                  })
-                } else {
-                  // If not on homepage, navigate to homepage with hash
-                  window.location.href = '/#contact'
-                }
-              }}
+            <Link 
+              href="/contact" 
               className={`px-3 py-1.5 text-xs font-medium hover:opacity-70 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
             >
               Contact
-            </button>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button & Theme Toggle Container */}
@@ -418,30 +403,15 @@ export default function Home() {
               >
                 Ventures
               </Link>
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  setIsMobileMenuOpen(false)
-                  const contactSection = document.getElementById('contact')
-                  if (contactSection) {
-                    const header = document.querySelector('header')
-                    const headerHeight = header ? header.offsetHeight : 80
-                    const elementPosition = contactSection.getBoundingClientRect().top + window.scrollY
-                    const offsetPosition = elementPosition - headerHeight - 20
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: 'smooth'
-                    })
-                  } else {
-                    window.location.href = '/#contact'
-                  }
-                }}
+              <Link 
+                href="/contact"
+                onClick={handleNavClick}
                 className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
                   isDark ? 'text-white' : 'text-black'
                 }`}
               >
                 Contact
-              </button>
+              </Link>
             </div>
           </nav>
         </div>
@@ -474,13 +444,17 @@ export default function Home() {
               }}
               onMouseEnter={(e) => {
                 if (!isMobile) {
-                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement
-                  if (tooltip) {
-                    const rect = e.currentTarget.getBoundingClientRect()
-                    tooltip.style.left = `${rect.left + rect.width / 2}px`
-                    tooltip.style.top = `${rect.top - 8}px`
-                    tooltip.style.transform = 'translate(-50%, -100%)'
-                  }
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  setAhojTooltipPosition({
+                    left: rect.left + rect.width / 2,
+                    top: rect.top - 8
+                  })
+                  setIsAhojHovered(true)
+                }
+              }}
+              onMouseLeave={() => {
+                if (!isMobile) {
+                  setIsAhojHovered(false)
                 }
               }}
             >
@@ -534,40 +508,37 @@ export default function Home() {
                   transform: 'translateX(-50%)'
                 }}
               ></span>
-              {!isMobile && (
-                <>
-                  {/* Desktop tooltip */}
-                  <span 
-                    data-tooltip
-                    className="px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none shadow-lg relative scale-95 translate-y-2 group-hover:scale-100 group-hover:translate-y-0 ${
-                      isDark ? 'bg-white text-black' : 'bg-black text-white'
-                    }" 
-                    style={{ 
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
-                      maxWidth: 'calc(100vw - 2rem)',
-                      backgroundColor: isDark ? '#ffffff' : '#000000',
-                      color: isDark ? '#000000' : '#ffffff',
-                      zIndex: 100,
-                      position: 'fixed',
-                      left: '50%',
-                      top: '0',
-                      transform: 'translate(-50%, -100%)'
-                    }}
-                  >
-                    Slovak for "hello"
-                    <span 
-                      className="absolute top-full left-1/2 transform -translate-x-1/2"
-                      style={{
-                        border: '4px solid transparent',
-                        borderTopColor: isDark ? '#ffffff' : '#000000'
-                      }}
-                    ></span>
-                  </span>
-                </>
-              )}
             </span>
             <span className="md:inline block mt-2 md:mt-0">Max Mencl here!</span>
           </h1>
+          {/* Desktop tooltip - rendered outside h1 to escape stacking context */}
+          {!isMobile && (
+            <span 
+              data-tooltip
+              className={`px-3 py-1.5 text-xs font-normal rounded-lg whitespace-nowrap transition-all pointer-events-none shadow-lg z-[130] ${
+                isDark ? 'bg-white text-black' : 'bg-black text-white'
+              } ${isAhojHovered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2'}`}
+              style={{ 
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif', 
+                maxWidth: 'calc(100vw - 2rem)',
+                backgroundColor: isDark ? '#ffffff' : '#000000',
+                color: isDark ? '#000000' : '#ffffff',
+                position: 'fixed',
+                left: `${ahojTooltipPosition.left}px`,
+                top: `${ahojTooltipPosition.top}px`,
+                transform: 'translate(-50%, -100%)'
+              }}
+            >
+              Slovak for "hello"
+              <span 
+                className="absolute top-full left-1/2 transform -translate-x-1/2"
+                style={{
+                  border: '4px solid transparent',
+                  borderTopColor: isDark ? '#ffffff' : '#000000'
+                }}
+              ></span>
+            </span>
+          )}
           <p className={`text-base md:text-lg mb-8 max-w-1xl leading-relaxed break-words w-full ${isDark ? 'text-gray-300' : 'text-gray-600'}`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', maxWidth: '100%', boxSizing: 'border-box' }}>
             User Experience (UX) Designer based in The Hague, The Netherlands{' '}
             <span 
@@ -767,14 +738,6 @@ export default function Home() {
               className={`underline hover:opacity-70 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
             >
               YouTube
-            </a>
-            <a 
-              href="https://github.com/menclmax" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`underline hover:opacity-70 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
-            >
-              GitHub
             </a>
           </div>
         </section>

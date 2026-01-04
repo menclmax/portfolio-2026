@@ -101,28 +101,12 @@ export default function VenturesPage() {
             >
               Ventures
             </Link>
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                const contactSection = document.getElementById('contact')
-                if (contactSection) {
-                  const header = document.querySelector('header')
-                  const headerHeight = header ? header.offsetHeight : 80
-                  const elementPosition = contactSection.getBoundingClientRect().top + window.scrollY
-                  const offsetPosition = elementPosition - headerHeight - 20
-                  window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                  })
-                } else {
-                  // If not on homepage, navigate to homepage with hash
-                  window.location.href = '/#contact'
-                }
-              }}
+            <Link 
+              href="/contact" 
               className={`px-3 py-1.5 text-xs font-medium hover:opacity-70 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
             >
               Contact
-            </button>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button & Theme Toggle Container */}
@@ -310,30 +294,15 @@ export default function VenturesPage() {
               >
                 Ventures
               </Link>
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  setIsMobileMenuOpen(false)
-                  const contactSection = document.getElementById('contact')
-                  if (contactSection) {
-                    const header = document.querySelector('header')
-                    const headerHeight = header ? header.offsetHeight : 80
-                    const elementPosition = contactSection.getBoundingClientRect().top + window.scrollY
-                    const offsetPosition = elementPosition - headerHeight - 20
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: 'smooth'
-                    })
-                  } else {
-                    window.location.href = '/#contact'
-                  }
-                }}
+              <Link 
+                href="/contact"
+                onClick={handleNavClick}
                 className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
                   isDark ? 'text-white' : 'text-black'
                 }`}
               >
                 Contact
-              </button>
+              </Link>
             </div>
           </nav>
         </div>

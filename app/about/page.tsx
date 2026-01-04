@@ -114,7 +114,7 @@ export default function AboutPage() {
               Ventures
             </Link>
             <Link 
-              href="/#contact" 
+              href="/contact" 
               className={`px-3 py-1.5 text-xs font-medium hover:opacity-70 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
             >
               Contact
@@ -307,7 +307,7 @@ export default function AboutPage() {
                 Ventures
               </Link>
               <Link 
-                href="/#contact"
+                href="/contact"
                 onClick={handleNavClick}
                 className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
                   isDark ? 'text-white' : 'text-black'
@@ -373,7 +373,7 @@ export default function AboutPage() {
                     }}
                   >
                     <img 
-                      src="/assets/IMG_1452.JPG" 
+                      src="/assets/about/IMG_1452-c.jpg" 
                       alt="Interviewing worldwide pianist Costantino Carrara" 
                       className="object-cover w-full h-full"
                     />
@@ -444,7 +444,7 @@ export default function AboutPage() {
                     }}
                   >
                     <img 
-                      src="/assets/IMG_2680.JPG" 
+                      src="/assets/about/IMG_2680-c.jpg" 
                       alt="Interviewing Ivana Tattoo Art" 
                       className="object-cover w-full h-full"
                     />
@@ -515,7 +515,7 @@ export default function AboutPage() {
                     }}
                   >
                     <Image 
-                      src="/assets/IMG_6704.JPG" 
+                      src="/assets/about/IMG_6704-c.jpg" 
                       alt="Bratislava, Slovakia" 
                       fill
                       loading="eager"
@@ -589,7 +589,7 @@ export default function AboutPage() {
                     }}
                   >
                     <Image 
-                      src="/assets/IMG_8467.JPG" 
+                      src="/assets/about/IMG_8467-c.jpg" 
                       alt="TV Markiza" 
                       fill
                       loading="eager"
@@ -667,7 +667,7 @@ export default function AboutPage() {
                 >
                   <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                     <img 
-                      src="/assets/IMG_1452.JPG" 
+                      src="/assets/about/IMG_1452-c.jpg" 
                       alt="About me" 
                       className="object-cover rounded-lg w-full h-full"
                     />
@@ -738,7 +738,7 @@ export default function AboutPage() {
                 >
                   <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                     <img 
-                      src="/assets/IMG_2680.JPG" 
+                      src="/assets/about/IMG_2680-c.jpg" 
                       alt="About me" 
                       className="object-cover rounded-lg w-full h-full"
                     />
@@ -809,7 +809,7 @@ export default function AboutPage() {
                 >
                   <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                     <Image 
-                      src="/assets/IMG_6704.JPG" 
+                      src="/assets/about/IMG_6704-c.jpg" 
                       alt="About me" 
                       fill
                       loading="eager"
@@ -883,7 +883,7 @@ export default function AboutPage() {
                 >
                   <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                     <Image 
-                      src="/assets/IMG_8467.JPG" 
+                      src="/assets/about/IMG_8467-c.jpg" 
                       alt="About me" 
                       fill
                       loading="eager"

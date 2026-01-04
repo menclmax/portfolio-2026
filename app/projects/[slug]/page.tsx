@@ -585,7 +585,7 @@ export default function ProjectPage() {
               Ventures
             </Link>
             <Link 
-              href="/#contact" 
+              href="/contact" 
               className={`px-3 py-1.5 text-xs font-medium hover:opacity-70 transition-opacity ${isDark ? 'text-white' : 'text-black'}`}
             >
               Contact
@@ -778,7 +778,7 @@ export default function ProjectPage() {
                 Ventures
               </Link>
               <Link 
-                href="/#contact"
+                href="/contact"
                 onClick={handleNavClick}
                 className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-opacity hover:opacity-70 ${
                   isDark ? 'text-white' : 'text-black'
