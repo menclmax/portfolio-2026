@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,40 +23,54 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Here you would typically send an email using a service like:
-    // - Nodemailer with SMTP
-    // - SendGrid
-    // - Resend
-    // - AWS SES
-    // For now, we'll just log it and return success
-    // You can integrate with your preferred email service
-    
-    console.log('Contact form submission:', {
-      name,
-      email,
-      subject,
-      message,
-      timestamp: new Date().toISOString()
-    })
+    const resendKey = process.env.RESEND_API_KEY
+    const toEmail = process.env.CONTACT_TO_EMAIL || 'mencl.max1@gmail.com'
+    const fromEmail = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev'
 
-    // TODO: Replace this with actual email sending logic
-    // Example with a service like Resend:
-    /*
-    const resend = new Resend(process.env.RESEND_API_KEY)
-    await resend.emails.send({
-      from: 'contact@maxmencl.com',
-      to: 'mencl.max1@gmail.com',
-      subject: `Contact Form: ${subject}`,
+    if (!resendKey) {
+      console.error('Missing RESEND_API_KEY')
+      return NextResponse.json(
+        { error: 'Email service is not configured.' },
+        { status: 500 }
+      )
+    }
+
+    const resend = new Resend(resendKey)
+
+    const safeSubject = String(subject).slice(0, 140)
+    const safeName = String(name).slice(0, 140)
+    const safeEmail = String(email).slice(0, 254)
+    const safeMessage = String(message).slice(0, 10000)
+
+    const { error: resendError } = await resend.emails.send({
+      from: `Portfolio Contact <${fromEmail}>`,
+      to: [toEmail],
+      replyTo: safeEmail,
+      subject: `Contact: ${safeSubject}`,
+      text: [
+        `Name: ${safeName}`,
+        `Email: ${safeEmail}`,
+        `Subject: ${safeSubject}`,
+        '',
+        safeMessage,
+      ].join('\n'),
       html: `
         <h2>New contact form submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>
+        <p><strong>Subject:</strong> ${escapeHtml(safeSubject)}</p>
         <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
-      `
+        <p>${escapeHtml(safeMessage).replace(/\n/g, '<br>')}</p>
+      `,
     })
-    */
+
+    if (resendError) {
+      console.error('Resend error:', resendError)
+      return NextResponse.json(
+        { error: 'Failed to send message. Please try again later.' },
+        { status: 502 }
+      )
+    }
 
     return NextResponse.json(
       { message: 'Message sent successfully' },
@@ -68,4 +83,13 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+function escapeHtml(input: string) {
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
 }

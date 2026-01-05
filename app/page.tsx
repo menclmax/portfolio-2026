@@ -595,7 +595,9 @@ export default function Home() {
                 </span>
               )}
             </span>
-            {' '}I help brands build products that balance Dutch clarity with global reach. Through purposeful design, I turn complex problems into seamless digital experiences.
+            <br className="hidden md:block" />
+            <span className="md:hidden">{' '}</span>
+            I help brands build products that balance Dutch clarity with global reach. Through purposeful design, I turn complex problems into seamless digital experiences.
           </p>
 
           {/* Social Buttons */}
@@ -701,7 +703,7 @@ export default function Home() {
 
         {/* Contact Section */}
         <section id="contact" className="mt-24 mb-[68px]">
-          <h2 className={`text-xl font-semibold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>Contact</h2>
+          <h2 className={`text-xl font-semibold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>Let&apos;s Connect!</h2>
           <p className={`text-base mb-8 leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Reach me at{' '}
             <a 

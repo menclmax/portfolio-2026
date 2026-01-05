@@ -119,7 +119,7 @@ export const pinnedProjects: Project[] = [
   {
     title: 'ExamenTool',
     description: 'ExamenTool is a bespoke SaaS solution designed to digitize and automate the complex lifecycle of university exam registration',
-    image: '/assets/examentool-cover.jpg',
+    image: '/assets/HHS-1.png',
     url: '#',
     slug: 'examentool',
     fullDescription: 'ExamenTool is a digital platform designed for exam management and administration.',
