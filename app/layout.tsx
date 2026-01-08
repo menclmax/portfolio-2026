@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: 'Max Mencl Portfolio',
     images: [
       {
-        url: '/assets/Signeture.svg',
+        url: '/assets/og/og-picture.png',
         width: 1200,
         height: 630,
         alt: 'Max Mencl - UX Designer',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Max Mencl - UX Designer Portfolio',
     description: 'UX Designer in The Netherlands building clean, functional, and aesthetically honest interfaces.',
-    images: ['/assets/Signeture.svg'],
+    images: ['/assets/og/og-picture.png'],
   },
 }
 
