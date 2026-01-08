@@ -21,6 +21,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: `${project.title} - Max Mencl`,
     description: project.fullDescription || project.description,
+    alternates: {
+      canonical: `${baseUrl}/projects/${project.slug}`,
+    },
     openGraph: {
       title: `${project.title} - Max Mencl`,
       description: project.fullDescription || project.description,
