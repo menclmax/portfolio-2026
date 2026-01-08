@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { PostHogProvider } from '../components/PostHogProvider'
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://menclmax.com'
 
@@ -110,8 +111,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <PostHogProvider>
+          {children}
+        </PostHogProvider>
+      </body>
     </html>
   )
 }
-
