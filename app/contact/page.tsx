@@ -78,8 +78,10 @@ export default function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus('idle')
+    setErrorMessage('')
 
     try {
+      console.log('Submitting form:', formData)
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -89,6 +91,7 @@ export default function ContactPage() {
       })
 
       const data = await response.json()
+      console.log('API Response:', { status: response.status, data })
 
       if (response.ok) {
         setSubmitStatus('success')
@@ -104,6 +107,7 @@ export default function ContactPage() {
         setErrorMessage(data.error || 'Something went wrong. Please try again or email me directly at hello@menclmax.com')
       }
     } catch (error) {
+      console.error('Form submission error:', error)
       setSubmitStatus('error')
       setErrorMessage('Network error. Please try again or email me directly at hello@menclmax.com')
     } finally {

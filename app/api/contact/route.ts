@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     const resendKey = process.env.RESEND_API_KEY
     const toEmail = process.env.CONTACT_TO_EMAIL || 'hello@menclmax.com'
-    const fromEmail = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev'
+    const fromEmail = process.env.CONTACT_FROM_EMAIL || 'hello@menclmax.com'
 
     if (!resendKey) {
       console.error('Missing RESEND_API_KEY')
@@ -42,41 +42,54 @@ export async function POST(request: NextRequest) {
     const safeEmail = String(email).slice(0, 254)
     const safeMessage = String(message).slice(0, 10000)
 
-    const { data, error } = await resend.emails.send({
-      from: `Portfolio Contact <${fromEmail}>`,
-      to: [toEmail],
-      replyTo: safeEmail,
-      subject: `Contact: ${safeSubject}`,
-      text: [
-        `Name: ${safeName}`,
-        `Email: ${safeEmail}`,
-        `Subject: ${safeSubject}`,
-        '',
-        safeMessage,
-      ].join('\n'),
-      html: `
-        <h2>New contact form submission</h2>
-        <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>
-        <p><strong>Subject:</strong> ${escapeHtml(safeSubject)}</p>
-        <p><strong>Message:</strong></p>
-        <p>${escapeHtml(safeMessage).replace(/\n/g, '<br>')}</p>
-      `,
-    })
+    console.log('Sending email:', { toEmail, fromEmail, subject: safeSubject })
 
-    if (error) {
-      console.error('Resend error:', error)
-      const errorMsg = error.message || JSON.stringify(error)
+    try {
+      const { data, error } = await resend.emails.send({
+        from: fromEmail,
+        to: [toEmail],
+        replyTo: safeEmail,
+        subject: `Contact: ${safeSubject}`,
+        text: [
+          `Name: ${safeName}`,
+          `Email: ${safeEmail}`,
+          `Subject: ${safeSubject}`,
+          '',
+          safeMessage,
+        ].join('\n'),
+        html: `
+          <h2>New contact form submission</h2>
+          <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>
+          <p><strong>Subject:</strong> ${escapeHtml(safeSubject)}</p>
+          <p><strong>Message:</strong></p>
+          <p>${escapeHtml(safeMessage).replace(/\n/g, '<br>')}</p>
+        `,
+      })
+
+      if (error) {
+        console.error('Resend error details:', JSON.stringify(error, null, 2))
+        const errorMsg = error.message || JSON.stringify(error)
+        return NextResponse.json(
+          { error: `Failed to send message: ${errorMsg}` },
+          { status: 502 }
+        )
+      }
+
+      if (!data) {
+        console.error('Resend returned no data and no error')
+        return NextResponse.json(
+          { error: 'Failed to send message: No response from email service' },
+          { status: 502 }
+        )
+      }
+
+      console.log('Email sent successfully:', data.id)
+    } catch (resendError) {
+      console.error('Resend exception:', resendError)
+      const errorMsg = resendError instanceof Error ? resendError.message : String(resendError)
       return NextResponse.json(
         { error: `Failed to send message: ${errorMsg}` },
-        { status: 502 }
-      )
-    }
-
-    if (!data) {
-      console.error('Resend returned no data and no error')
-      return NextResponse.json(
-        { error: 'Failed to send message: No response from email service' },
         { status: 502 }
       )
     }
