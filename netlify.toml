@@ -5,3 +5,21 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+[[redirects]]
+  from = "http://menclmax.com/*"
+  to = "https://menclmax.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.menclmax.com/*"
+  to = "https://menclmax.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.menclmax.com/*"
+  to = "https://menclmax.com/:splat"
+  status = 301
+  force = true
+

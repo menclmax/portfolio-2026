@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const safeEmail = String(email).slice(0, 254)
     const safeMessage = String(message).slice(0, 10000)
 
-    const { error: resendError } = await resend.emails.send({
+    const result = await resend.emails.send({
       from: `Portfolio Contact <${fromEmail}>`,
       to: [toEmail],
       replyTo: safeEmail,
@@ -64,10 +64,19 @@ export async function POST(request: NextRequest) {
       `,
     })
 
-    if (resendError) {
-      console.error('Resend error:', resendError)
+    if (result.error) {
+      console.error('Resend error:', JSON.stringify(result.error, null, 2))
+      const errorMsg = result.error.message || JSON.stringify(result.error)
       return NextResponse.json(
-        { error: 'Failed to send message. Please try again later.' },
+        { error: `Failed to send message: ${errorMsg}` },
+        { status: 502 }
+      )
+    }
+
+    if (!result.data) {
+      console.error('Resend returned no data and no error:', result)
+      return NextResponse.json(
+        { error: 'Failed to send message: No response from email service' },
         { status: 502 }
       )
     }
@@ -78,8 +87,9 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('Error processing contact form:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Failed to send message. Please try again later.' },
+      { error: `Failed to send message: ${errorMessage}` },
       { status: 500 }
     )
   }

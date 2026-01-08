@@ -17,6 +17,7 @@ export default function ContactPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   useEffect(() => {
     setMounted(true)
@@ -91,6 +92,7 @@ export default function ContactPage() {
 
       if (response.ok) {
         setSubmitStatus('success')
+        setErrorMessage('')
         setFormData({
           name: '',
           email: '',
@@ -99,9 +101,11 @@ export default function ContactPage() {
         })
       } else {
         setSubmitStatus('error')
+        setErrorMessage(data.error || 'Something went wrong. Please try again or email me directly at hello@menclmax.com')
       }
     } catch (error) {
       setSubmitStatus('error')
+      setErrorMessage('Network error. Please try again or email me directly at hello@menclmax.com')
     } finally {
       setIsSubmitting(false)
     }
@@ -481,7 +485,7 @@ export default function ContactPage() {
               {submitStatus === 'error' && (
                 <div className={`py-3 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
                   <p className="text-sm">
-                    ✗ Something went wrong. Please try again or email me directly at hello@menclmax.com
+                    ✗ {errorMessage || 'Something went wrong. Please try again or email me directly at hello@menclmax.com'}
                   </p>
                 </div>
               )}
