@@ -25,7 +25,10 @@ export async function POST(request: NextRequest) {
 
     const resendKey = process.env.RESEND_API_KEY
     const toEmail = process.env.CONTACT_TO_EMAIL || 'hello@menclmax.com'
-    const fromEmail = process.env.CONTACT_FROM_EMAIL || 'hello@menclmax.com'
+    // Always use verified domain email address
+    const fromEmail = process.env.CONTACT_FROM_EMAIL?.endsWith('@menclmax.com') 
+      ? process.env.CONTACT_FROM_EMAIL 
+      : 'hello@menclmax.com'
 
     if (!resendKey) {
       console.error('Missing RESEND_API_KEY')
