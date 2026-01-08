@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { getProjectBySlug } from '@/data/projects'
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://menclmax.com'
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const project = getProjectBySlug(params.slug)
   
@@ -10,10 +12,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     }
   }
 
-  // Use relative URL - metadataBase from root layout will resolve it
+  // Construct absolute URL for OpenGraph images
+  // External URLs (http/https) are used as-is, relative paths are made absolute
   const projectImage = project.image.startsWith('http') 
     ? project.image 
-    : project.image
+    : `${baseUrl}${project.image.startsWith('/') ? project.image : `/${project.image}`}`
 
   return {
     title: `${project.title} - Max Mencl`,
