@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://maxmencl.com'
+
 export const metadata: Metadata = {
   title: 'Projects - Max Mencl',
   description: 'Explore the portfolio of Max Mencl - UX Designer projects including Campus Connext, LLO Caribbean, and more innovative digital solutions.',
@@ -10,7 +12,7 @@ export const metadata: Metadata = {
     siteName: 'Max Mencl Portfolio',
     images: [
       {
-        url: '/assets/og/og-picture.png',
+        url: `${baseUrl}/assets/og/og-picture.png`,
         width: 1200,
         height: 630,
         alt: 'Max Mencl - Projects',
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Projects - Max Mencl',
     description: 'Explore the portfolio of Max Mencl - UX Designer projects.',
-    images: ['/assets/og/og-picture.png'],
+    images: [`${baseUrl}/assets/og/og-picture.png`],
   },
 }
 
