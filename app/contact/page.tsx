@@ -481,7 +481,7 @@ export default function ContactPage() {
               {submitStatus === 'error' && (
                 <div className={`py-3 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
                   <p className="text-sm">
-                    ✗ Something went wrong. Please try again or email me directly at mencl.max1@gmail.com
+                    ✗ Something went wrong. Please try again or email me directly at hello@menclmax.com
                   </p>
                 </div>
               )}

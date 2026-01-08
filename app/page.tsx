@@ -707,10 +707,10 @@ export default function Home() {
           <p className={`text-base mb-8 leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Reach me at{' '}
             <a 
-              href="mailto:mencl.max1@gmail.com" 
+              href="mailto:hello@menclmax.com" 
               className="underline hover:opacity-70 transition-opacity"
             >
-              mencl.max1@gmail.com
+              hello@menclmax.com
             </a>
             {' '}for business.
             <br />

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     const resendKey = process.env.RESEND_API_KEY
-    const toEmail = process.env.CONTACT_TO_EMAIL || 'mencl.max1@gmail.com'
+    const toEmail = process.env.CONTACT_TO_EMAIL || 'hello@menclmax.com'
     const fromEmail = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev'
 
     if (!resendKey) {
