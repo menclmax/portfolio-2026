@@ -685,6 +685,11 @@ export default function Home() {
                           console.error('Image failed to load:', project.image)
                         }}
                       />
+                      {project.isNew && (
+                        <span className={`absolute top-3 right-3 text-xs px-2.5 py-1 rounded-full font-medium z-20 bg-red-500 text-white`}>
+                          New
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="mt-3">

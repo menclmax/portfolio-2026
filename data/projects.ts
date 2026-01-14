@@ -39,6 +39,7 @@ export interface Project {
     role: string
     text: string
   }[]
+  isNew?: boolean
 }
 
 export const pinnedProjects: Project[] = [
@@ -70,6 +71,7 @@ export const pinnedProjects: Project[] = [
     image: '/assets/llo-cover.png',
     url: '#',
     slug: 'llo-caribbean',
+    isNew: true,
     fullDescription: 'LLO Caribbean is a collaborative educational platform designed to foster lifelong learning and professional development across the Dutch Caribbean and the Netherlands. By uniting leading academic institutions, the project provides a centralized hub for accessible, high-quality courses and training programs.',
     about: 'In a strategic partnership with The Hague University of Applied Sciences, Utrecht University, the University of Curaçao, and the University of Aruba, we were commissioned to design and develop a comprehensive digital ecosystem for regional education. Our objective was to create a unified "Lifelong Learning" (LLO) portal that bridges the geographical gap between the Netherlands and the Caribbean.<br /><br />The resulting platform serves as a sophisticated marketplace and management system where these four institutions can seamlessly publish, manage, and track professional courses.<br /><br />Beyond a simple directory, the solution provides a streamlined application pipeline for users, integrated search and comparison tools, and a robust backend designed to handle cross-institutional data. This digital infrastructure empowers the region by making high-level academic and professional training more accessible than ever before.',
     aboutImages: [
