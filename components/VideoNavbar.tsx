@@ -25,7 +25,7 @@ export function VideoNavbar() {
   const [mounted, setMounted] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isHomeDropdownOpen, setIsHomeDropdownOpen] = useState(false)
-  const [homeDropdownRect, setHomeDropdownRect] = useState<{ top: number; left: number; width: number; height: number } | null>(null)
+  const [homeDropdownRect, setHomeDropdownRect] = useState<{ top: number; left: number; width: number; height: number; bottom: number } | null>(null)
   const [isHomeDropdownOpenMobile, setIsHomeDropdownOpenMobile] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
