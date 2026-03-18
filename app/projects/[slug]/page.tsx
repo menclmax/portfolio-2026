@@ -870,10 +870,10 @@ export default function ProjectPage() {
                             : (isDark ? 'text-gray-400' : 'text-gray-600')
                         }`}
                       >
-                        Prototyping
+                        {project.designProcess?.combinedPrototypingTesting ? 'Prototyping & Testing' : 'Prototyping'}
                       </button>
                     )}
-                    {testingRef.current && (
+                    {testingRef.current && !project.designProcess?.combinedPrototypingTesting && (
                       <button
                         onClick={() => scrollToSection(testingRef)}
                         className={`block text-sm hover:opacity-70 transition-colors duration-300 text-left cursor-pointer ${
@@ -978,13 +978,6 @@ export default function ProjectPage() {
           <h1 ref={titleRef} className={`text-4xl md:text-5xl font-bold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
             {project.title}
           </h1>
-
-          {/* Description */}
-          {project.fullDescription && (
-            <p className={`text-base md:text-lg leading-relaxed mb-8 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-              {project.fullDescription}
-            </p>
-          )}
 
           {/* Author Block */}
           {(project.author || project.role) && (
@@ -1229,9 +1222,30 @@ export default function ProjectPage() {
               <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
                 Research
               </h3>
-              <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                {project.designProcess?.research || 'To understand the root causes of campus fragmentation, I initiated the Discovery phase with a mix of qualitative and quantitative research. I conducted user interviews and surveys with students across various faculties to map their pain points. The research revealed a critical \'information overload\'—students were juggling multiple platforms for news, events, and networking. This insight shifted our focus from simply adding features to centralizing the ecosystem, ensuring that the MVP solved the actual problem of mental friction and missed opportunities.'}
-              </p>
+              {(() => {
+                const raw = project.designProcess?.research || 'To understand the root causes of campus fragmentation, I initiated the Discovery phase with a mix of qualitative and quantitative research. I conducted user interviews and surveys with students across various faculties to map their pain points. The research revealed a critical \'information overload\'—students were juggling multiple platforms for news, events, and networking. This insight shifted our focus from simply adding features to centralizing the ecosystem, ensuring that the MVP solved the actual problem of mental friction and missed opportunities.'
+                const [part1, part2] = raw.split('[CALLOUT]')
+                return (
+                  <>
+                    <p className={`text-base leading-relaxed mb-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                      dangerouslySetInnerHTML={{ __html: part1 }}
+                    />
+                    {project.designProcess?.researchCallout && (
+                      <blockquote
+                        className={`pl-4 py-1 mb-6 text-base italic leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                        style={{ borderLeft: `3px solid ${isDark ? '#444' : '#ccc'}` }}
+                      >
+                        {project.designProcess.researchCallout}
+                      </blockquote>
+                    )}
+                    {part2 && (
+                      <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                        dangerouslySetInnerHTML={{ __html: part2 }}
+                      />
+                    )}
+                  </>
+                )
+              })()}
             </div>
 
             {/* Ideation */}
@@ -1239,64 +1253,91 @@ export default function ProjectPage() {
               <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
                 Ideation
               </h3>
-              <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                {project.designProcess?.ideation || 'Ideation content will go here...'}
-              </p>
+              {(() => {
+                const raw = project.designProcess?.ideation || 'Ideation content will go here...'
+                const [part1, part2] = raw.split('[CALLOUT]')
+                return (
+                  <>
+                    <p className={`text-base leading-relaxed mb-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                      dangerouslySetInnerHTML={{ __html: part1 }}
+                    />
+                    {project.designProcess?.ideationCallout && part2 && (
+                      <blockquote
+                        className={`pl-4 py-1 mb-6 text-base italic leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                        style={{ borderLeft: `3px solid ${isDark ? '#444' : '#ccc'}` }}
+                      >
+                        {project.designProcess.ideationCallout}
+                      </blockquote>
+                    )}
+                    {part2 && (
+                      <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                        dangerouslySetInnerHTML={{ __html: part2 }}
+                      />
+                    )}
+                  </>
+                )
+              })()}
             </div>
 
             {/* Prototyping */}
             <div ref={prototypingRef} style={{ marginBottom: '64px' }}>
               <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
-                Prototyping
+                {project.designProcess?.combinedPrototypingTesting ? 'Prototyping & Testing' : 'Prototyping'}
               </h3>
               {project.designProcess?.prototyping ? (
                 <div className="space-y-8">
-                  {project.designProcess.prototyping.split('[IMAGE:').map((part, index) => {
-                    if (index === 0) {
+                  {(() => {
+                    const raw = project.designProcess!.prototyping!
+                    const tokens = raw.split(/(\[CALLOUT\]|\[IMAGE:[^\]]+\])/g)
+                    return tokens.map((token, i) => {
+                      if (token === '[CALLOUT]') {
+                        return project.designProcess?.prototypingCallout ? (
+                          <blockquote
+                            key={i}
+                            className={`pl-4 py-1 text-base italic leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                            style={{ borderLeft: `3px solid ${isDark ? '#444' : '#ccc'}` }}
+                          >
+                            {project.designProcess.prototypingCallout}
+                          </blockquote>
+                        ) : null
+                      }
+                      if (token.startsWith('[IMAGE:')) {
+                        const inner = token.slice(7, -1)
+                        const [imageName, description] = inner.split('|')
+                        return (
+                          <div key={i} className="mt-8 mb-8">
+                            <div
+                              className={isMobile ? 'rounded-lg overflow-hidden' : 'p-4 rounded-lg'}
+                              style={{
+                                border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
+                                backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
+                                boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
+                              }}
+                            >
+                              <img
+                                src={`/assets/${imageName}`}
+                                alt={description || `Prototyping image`}
+                                className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
+                              />
+                            </div>
+                            {description && (
+                              <p className={`text-sm text-center mt-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {description}
+                              </p>
+                            )}
+                          </div>
+                        )
+                      }
+                      if (!token.trim()) return null
                       return (
-                        <div 
-                          key={index}
+                        <div
+                          key={i}
                           className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
-                          dangerouslySetInnerHTML={{ __html: part }}
+                          dangerouslySetInnerHTML={{ __html: token }}
                         />
                       )
-                    }
-                    const [imageInfo, ...rest] = part.split(']')
-                    const [imageName, description] = imageInfo.split('|')
-                    const imagePath = `/assets/${imageName}`
-                    const remainingText = rest.join(']')
-                    return (
-                      <div key={index}>
-                        <div className="mt-8 mb-8">
-                          <div 
-                            className={isMobile ? 'rounded-lg overflow-hidden' : 'p-4 rounded-lg'}
-                            style={{
-                              border: isMobile ? '1px solid #e5e5e5' : (isDark ? '1.5px solid #232323' : '1.5px solid rgba(35, 35, 35, 0.3)'),
-                              backgroundColor: isMobile ? 'transparent' : (isDark ? '#1a1a1a' : '#f9f9f9'),
-                              boxShadow: isMobile ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
-                            }}
-                          >
-                            <img 
-                              src={imagePath} 
-                              alt={description || `Prototyping ${index}`}
-                              className={`w-full h-auto ${isMobile ? '' : 'rounded-lg'}`}
-                            />
-                          </div>
-                          {description && (
-                            <p className={`text-sm text-center mt-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {description}
-                            </p>
-                          )}
-                        </div>
-                        {remainingText && (
-                          <div 
-                            className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
-                            dangerouslySetInnerHTML={{ __html: remainingText }}
-                          />
-                        )}
-                      </div>
-                    )
-                  })}
+                    })
+                  })()}
                 </div>
               ) : (
                 <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -1306,14 +1347,16 @@ export default function ProjectPage() {
             </div>
 
             {/* Testing */}
-            <div ref={testingRef} style={{ marginBottom: '64px' }}>
-              <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
-                Testing
-              </h3>
-              <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                {project.designProcess?.testing || 'Testing content will go here...'}
-              </p>
-            </div>
+            {!project.designProcess?.combinedPrototypingTesting && (
+              <div ref={testingRef} style={{ marginBottom: '64px' }}>
+                <h3 className={`text-xl font-semibold mb-4 ${isDark ? 'text-white' : 'text-black'}`}>
+                  Testing
+                </h3>
+                <p className={`text-base leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                  dangerouslySetInnerHTML={{ __html: project.designProcess?.testing || 'Testing content will go here...' }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Figma Prototype */}
